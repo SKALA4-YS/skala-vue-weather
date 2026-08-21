@@ -11,6 +11,7 @@ const navItems = [
   { to: '/week', label: '주간 계획' },
   { to: '/ranking', label: '지역 순위' },
   { to: '/about', label: '소개' },
+  { to: '/lab', label: '실습 기록' },
 ]
 </script>
 
@@ -47,7 +48,8 @@ const navItems = [
 
     <footer class="app-foot">
       <span>SKALA Vue 실습 · OpenWeatherMap · Open-Meteo</span>
-      <RouterLink to="/practice/3" class="foot-link">지난 과제 보관함</RouterLink>
+      <RouterLink to="/troubleshooting" class="foot-link">트러블슈팅</RouterLink>
+      <RouterLink to="/practice/3" class="foot-link">지난 과제</RouterLink>
     </footer>
   </div>
 </template>

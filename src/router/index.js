@@ -37,6 +37,17 @@ const routes = [
     component: () => import('../views/WeatherDetailView.vue'),
   },
   {
+    // 실습 기록과 트러블슈팅
+    path: '/lab',
+    name: 'practice-lab',
+    component: () => import('../views/PracticeLabView.vue'),
+  },
+  {
+    path: '/troubleshooting',
+    name: 'troubleshooting',
+    component: () => import('../views/TroubleshootingView.vue'),
+  },
+  {
     // 주간 계획. 5일 예보로 언제 뛸지 고른다.
     path: '/week',
     name: 'week-plan',
