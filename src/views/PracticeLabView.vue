@@ -290,14 +290,60 @@ const withCode = (text) => text.replace(/`([^`]+)`/g, '<code>$1</code>')
   text-decoration: none;
 }
 
-/* 예전 화면은 자기 배경을 갖고 있어 회색 무대 위에 올린다 */
+/* 1~3일차 화면은 흰 배경을 전제로 만든 것이라 다크 테마에 얹으면 글씨가 묻힌다.
+   당시 화면을 그대로 보여주는 것이 아카이브의 목적이므로,
+   이 무대 안에서만 토큰을 라이트 값으로 되돌린다. */
 .stage {
+  --bg: #eef2f7;
+  --surface: #ffffff;
+  --surface-2: #f2f7fd;
+  --line: #d5e3f2;
+  --line-soft: #e6eff9;
+  --text: #14243a;
+  --text-dim: #52708f;
+  --text-faint: #8ba3bd;
+  --accent: #0a84ff;
+  --accent-soft: #d9ebff;
+  --on-accent: #ffffff;
+  --shadow: 0 1px 2px rgba(18, 48, 88, 0.06), 0 6px 16px rgba(18, 48, 88, 0.07);
+  --edge: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  --el-bg-color: #ffffff;
+  --el-bg-color-overlay: #ffffff;
+  --el-text-color-primary: #14243a;
+  --el-text-color-regular: #52708f;
+  --el-text-color-secondary: #8ba3bd;
+  --el-border-color: #d5e3f2;
+  --el-border-color-light: #e6eff9;
+  --el-border-color-lighter: #e6eff9;
+  --el-fill-color-blank: #ffffff;
+  --el-fill-color-light: #f2f7fd;
+
   padding: 16px;
-  background-color: var(--surface-2);
+  background-color: var(--bg);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius);
+  color: var(--text);
   max-height: 620px;
   overflow-y: auto;
+}
+
+/* 폼 요소는 글자색을 상속하지 않고 브라우저의 다크 스타일을 따라간다.
+   color-scheme을 밝게 고정하고 색도 직접 지정해야 입력창과 버튼이 제대로 보인다. */
+.stage {
+  color-scheme: light;
+}
+
+.stage :deep(button),
+.stage :deep(input),
+.stage :deep(select),
+.stage :deep(textarea) {
+  color: var(--text);
+}
+
+/* 무대 안에서는 날씨 아이콘 보정도 되돌린다 */
+.stage :deep(img[src*='openweathermap.org']) {
+  filter: none;
 }
 
 .stage-link {

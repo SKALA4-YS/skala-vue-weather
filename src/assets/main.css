@@ -44,14 +44,14 @@
 html.dark {
   --bg: #0a0e14;
   --bg-grad: linear-gradient(180deg, #101823 0%, #0a0e14 60%);
-  --surface: #141a22;
-  --surface-2: #1b232d;
-  --line: #263040;
-  --line-soft: #1e2732;
+  --surface: #161d27;
+  --surface-2: #212b38;
+  --line: #33404f;
+  --line-soft: #26313e;
 
-  --text: #e9eef4;
-  --text-dim: #93a1b3;
-  --text-faint: #5f6d7e;
+  --text: #eef3f9;
+  --text-dim: #adbccd;
+  --text-faint: #8496aa;
 
   --accent: #35a0ff;
   --accent-strong: #58b4ff;
@@ -154,6 +154,12 @@ select,
 button {
   font-family: inherit;
   font-size: inherit;
+}
+
+/* 날씨 아이콘은 밝은 배경을 전제로 그려져 있어 다크에서는 묻힌다.
+   밝기를 올리고 옅은 테두리를 줘서 형태가 드러나게 한다. */
+html.dark img[src*='openweathermap.org'] {
+  filter: brightness(1.18) drop-shadow(0 0 1px rgba(255, 255, 255, 0.35));
 }
 
 /* primary 버튼은 파란 배경에 흰 글씨가 기본이라 그대로 두고, 굵기만 올린다 */
