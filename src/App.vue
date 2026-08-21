@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import UnitToggler from './components/exercise/UnitToggler.vue'
 import ThemeToggler from './components/exercise/ThemeToggler.vue'
 import WeatherScene from './components/exercise/WeatherScene.vue'
+import ShoeMark from './components/exercise/ShoeMark.vue'
 
 // 4일차: 화면 전환 상태가 없다. 지금 어떤 화면인지는 URL이 들고 있다.
 // 5일차: 두 토글러는 props도 이벤트도 없이 스토어에서 값을 꺼내 쓴다.
@@ -23,9 +24,9 @@ const navItems = [
   <div class="app">
     <header class="app-header">
       <RouterLink to="/" class="brand">
-        <span class="brand-mark">RW</span>
+        <ShoeMark :size="38" />
         <span class="brand-text">
-          <span class="brand-name">RUNNING WEATHER</span>
+          <span class="brand-name">RUNNING<em>WEATHER</em></span>
           <span class="brand-sub">오늘 뛰기 좋은 날인가</span>
         </span>
       </RouterLink>
@@ -83,20 +84,8 @@ const navItems = [
   text-decoration: none;
 }
 
-.brand-mark {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  background: linear-gradient(140deg, #5cb0ff 0%, var(--accent) 45%, var(--accent-strong) 100%);
-  border-radius: 11px;
-  box-shadow:
-    0 3px 8px rgba(10, 132, 255, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+.brand :deep(.plate) {
+  filter: drop-shadow(0 3px 8px rgba(10, 132, 255, 0.4));
 }
 
 .brand-text {
@@ -139,7 +128,9 @@ const navItems = [
   padding: 9px 12px;
   border-radius: 999px;
   color: var(--text-dim);
-  font-size: 14px;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   text-align: center;
   text-decoration: none;
   white-space: nowrap;

@@ -36,127 +36,235 @@ const scoreColor = computed(() => {
   if (score >= 40) return 'var(--warn)'
   return 'var(--danger)'
 })
+
+const stats = computed(() => [
+  { label: 'TEMP', value: displayTempText.value },
+  { label: 'HUMIDITY', value: `${props.city.humidity}%` },
+  { label: 'WIND', value: `${props.city.wind}m/s` },
+  { label: 'PM10', value: props.city.pm10 },
+])
 </script>
 
 <template>
   <section class="hero">
-    <p class="section-label">{{ label }}</p>
+    <!-- 사선 스트라이프. 속도감을 주는 장식이라 콘텐츠와 겹치지 않게 오른쪽 위에만 둔다 -->
+    <div class="stripes" aria-hidden="true" />
 
-    <div class="body">
+    <header class="head">
+      <p class="eyebrow">{{ label }}</p>
       <img
         v-if="city.icon"
         class="icon"
         :src="iconUrl(city.icon)"
         :alt="city.status"
-        width="88"
-        height="88"
+        width="64"
+        height="64"
       />
+    </header>
 
-      <div class="main">
-        <p class="name">{{ city.name }}<span class="region">{{ city.region }}</span></p>
-        <p class="temp num">{{ displayTempText }}</p>
-        <p class="status">{{ city.status }} · 습도 {{ city.humidity }}% · 바람 {{ city.wind }}m/s</p>
-      </div>
+    <p class="place">
+      {{ city.name }}
+      <span class="region">{{ city.region }}</span>
+    </p>
 
-      <div class="score-box">
-        <p class="score num" :style="{ color: scoreColor }">{{ index.score }}</p>
-        <p class="score-label">러닝 지수 · {{ index.grade.label }}</p>
-        <RouterLink class="link" :to="`/running?city=${city.id}`">분석 보기</RouterLink>
+    <div class="score-row">
+      <p class="score num" :style="{ color: scoreColor }">{{ index.score }}</p>
+
+      <div class="score-side">
+        <p class="grade" :style="{ color: scoreColor }">{{ index.grade.label }}</p>
+        <div class="bar">
+          <div
+            class="bar-fill"
+            :style="{ width: `${index.score}%`, backgroundColor: scoreColor }"
+          />
+        </div>
+        <p class="comment">{{ index.grade.comment }}</p>
       </div>
     </div>
 
-    <p class="comment">{{ index.grade.comment }}</p>
+    <dl class="stats">
+      <div v-for="stat in stats" :key="stat.label" class="stat">
+        <dt>{{ stat.label }}</dt>
+        <dd class="num">{{ stat.value }}</dd>
+      </div>
+    </dl>
+
+    <RouterLink class="cta" :to="`/running?city=${city.id}`">
+      분석 보기
+      <span class="cta-arrow" aria-hidden="true">→</span>
+    </RouterLink>
   </section>
 </template>
 
 <style scoped>
 .hero {
-  padding: 20px;
+  position: relative;
+  padding: 22px;
   background:
-    radial-gradient(120% 130% at 88% 0%, var(--accent-soft) 0%, transparent 58%),
+    radial-gradient(120% 130% at 92% 0%, var(--accent-soft) 0%, transparent 56%),
     var(--surface);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius);
   box-shadow: var(--shadow), var(--edge);
+  overflow: hidden;
 }
 
-.body {
+.stripes {
+  position: absolute;
+  top: -30px;
+  right: -40px;
+  width: 220px;
+  height: 150px;
+  background: repeating-linear-gradient(
+    115deg,
+    var(--accent) 0 3px,
+    transparent 3px 13px
+  );
+  opacity: 0.16;
+  transform: skewX(-8deg);
+  pointer-events: none;
+}
+
+.head {
+  position: relative;
+  z-index: 1;
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.hero p {
+  margin: 0;
+}
+
+/* 스포츠 브랜드에서 자주 쓰는 대문자 소제목 */
+.eyebrow {
+  color: var(--text-faint);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .icon {
-  flex-shrink: 0;
+  margin: -8px -4px -8px 0;
+  filter: drop-shadow(0 2px 6px rgba(20, 50, 90, 0.18));
 }
 
-.main {
+.place {
+  position: relative;
+  z-index: 1;
+  margin-top: 2px !important;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.region {
+  margin-left: 7px;
+  color: var(--text-faint);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.score-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.score {
+  font-size: 82px;
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+}
+
+.score-side {
   flex-grow: 1;
   min-width: 0;
 }
 
-.main p,
-.score-box p {
-  margin: 0;
-}
-
-.name {
+.grade {
   font-size: 17px;
-  font-weight: 700;
+  font-weight: 900;
+  letter-spacing: -0.01em;
 }
 
-.region {
-  margin-left: 6px;
-  color: var(--text-faint);
-  font-size: 12.5px;
-  font-weight: 400;
+.bar {
+  height: 6px;
+  margin: 6px 0 8px;
+  background-color: var(--surface-2);
+  border-radius: 3px;
+  overflow: hidden;
 }
 
-.temp {
-  font-size: 52px;
-  font-weight: 800;
-  line-height: 1.05;
-}
-
-.status {
-  color: var(--text-dim);
-  font-size: 13.5px;
-}
-
-.score-box {
-  flex-shrink: 0;
-  text-align: right;
-}
-
-.score {
-  font-size: 44px;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.score-label {
-  color: var(--text-faint);
-  font-size: 12px;
-}
-
-.link {
-  display: inline-block;
-  margin-top: 4px;
-  color: var(--accent);
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.link:hover {
-  text-decoration: underline;
+.bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.35s ease;
 }
 
 .comment {
-  margin: 14px 0 0;
-  padding-top: 12px;
-  border-top: 1px solid var(--line-soft);
   color: var(--text-dim);
-  font-size: 13.5px;
+  font-size: 13px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  margin: 18px 0 0;
+  background-color: var(--line-soft);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.stat {
+  padding: 10px 8px;
+  background-color: var(--surface);
+  text-align: center;
+}
+
+.stat dt {
+  color: var(--text-faint);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.stat dd {
+  margin: 2px 0 0;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 9px 18px;
+  background-color: var(--text);
+  border-radius: 999px;
+  color: var(--surface);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: gap 0.16s ease;
+}
+
+.cta:hover {
+  gap: 12px;
+}
+
+.cta-arrow {
+  font-weight: 700;
 }
 </style>

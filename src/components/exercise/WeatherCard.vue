@@ -76,6 +76,9 @@ const outfitTips = computed(() => {
 
 <template>
   <div class="card" :class="selected ? 'is-selected' : ''" @click="handleSelect">
+    <!-- 왼쪽 세로 바가 점수 색을 그대로 받아 목록에서 등급이 먼저 읽힌다 -->
+    <span class="rail" :style="{ backgroundColor: scoreColor }" aria-hidden="true" />
+
     <div class="head">
       <div>
         <p class="name">{{ city.name }}</p>
@@ -125,9 +128,11 @@ const outfitTips = computed(() => {
 <style scoped>
 /* [3일차 요구사항 5] 카드 디자인은 이 파일 안에서만 유효하다 */
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  padding: 14px;
+  padding: 14px 14px 14px 18px;
+  overflow: hidden;
   background-color: var(--surface);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius-sm);
@@ -143,6 +148,19 @@ const outfitTips = computed(() => {
   border-color: var(--accent);
   transform: translateY(-3px);
   box-shadow: var(--shadow-lift), var(--edge);
+}
+
+.card:hover .rail {
+  width: 8px;
+}
+
+.rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  transition: width 0.16s ease;
 }
 
 .card:active {
@@ -165,13 +183,16 @@ const outfitTips = computed(() => {
 }
 
 .name {
-  font-size: 16.5px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
 }
 
 .area {
   color: var(--text-faint);
-  font-size: 11.5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
 .mid {
@@ -186,9 +207,10 @@ const outfitTips = computed(() => {
 }
 
 .temp {
-  font-size: 28px;
-  font-weight: 800;
-  line-height: 1.1;
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
 }
 
 .status {
@@ -226,8 +248,9 @@ const outfitTips = computed(() => {
 }
 
 .score {
-  font-size: 20px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
 }
 
 .grade {

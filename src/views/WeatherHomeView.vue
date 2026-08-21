@@ -136,8 +136,10 @@ const colorOf = (score) => {
 }
 
 const heroLabel = computed(() => {
-  if (selectedCityInfo.value !== null) return '선택한 지역'
-  return scoreOf(heroCity.value) >= 55 ? '지금 가장 뛰기 좋은 곳' : '그나마 나은 곳'
+  if (selectedCityInfo.value !== null) return "SELECTED · 선택한 지역"
+  return scoreOf(heroCity.value) >= 55
+    ? "TODAY'S PICK · 지금 가장 뛰기 좋은 곳"
+    : "TODAY'S PICK · 그나마 나은 곳"
 })
 
 /* ── watch / watchEffect (2일차 실습 유지) ────── */
@@ -229,7 +231,7 @@ const handleHotUpdate = (newHot) => {
     <section class="stage">
       <div class="map-col">
         <div class="map-head">
-          <p class="section-label">전국 러닝 지도</p>
+          <p class="section-label">RUN MAP · 전국 러닝 지도</p>
           <span class="map-count num">{{ weatherStore.cities.length }}개 지역</span>
         </div>
 
@@ -244,7 +246,7 @@ const handleHotUpdate = (newHot) => {
         <HeroPanel :city="heroCity" :label="heroLabel" />
 
         <div class="surface top-list">
-          <p class="section-label">지금 뛰기 좋은 곳</p>
+          <p class="section-label">TOP RUNNERS · 지금 뛰기 좋은 곳</p>
 
           <button
             v-for="(city, rank) in topCities"
@@ -265,7 +267,7 @@ const handleHotUpdate = (newHot) => {
         </div>
 
         <div class="surface loc-box">
-          <p class="section-label">내 위치</p>
+          <p class="section-label">MY LOCATION</p>
 
           <template v-if="weatherStore.myLocation !== null">
             <p class="loc-temp num">{{ weatherStore.myLocation.temp }}°</p>
@@ -444,17 +446,18 @@ const handleHotUpdate = (newHot) => {
 }
 
 .top-rank {
-  width: 16px;
+  width: 18px;
   color: var(--text-faint);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 900;
 }
 
 .top-name {
   flex-grow: 1;
   color: var(--text);
-  font-size: 14.5px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .top-name em {
@@ -466,8 +469,9 @@ const handleHotUpdate = (newHot) => {
 }
 
 .top-score {
-  font-size: 18px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
 }
 
 .loc-box p {
@@ -525,6 +529,7 @@ const handleHotUpdate = (newHot) => {
 
 .area-tab {
   padding: 6px 15px;
+  font-weight: 700;
   background-color: var(--surface-2);
   border: 1px solid var(--line-soft);
   border-radius: 999px;
