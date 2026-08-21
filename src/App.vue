@@ -12,8 +12,7 @@ const navItems = [
   { to: '/running', label: '러닝 지수' },
   { to: '/week', label: '주간 계획' },
   { to: '/ranking', label: '지역 순위' },
-  { to: '/about', label: '소개' },
-  { to: '/lab', label: '실습 기록' },
+  { to: '/lab', label: '실습 아카이브' },
 ]
 </script>
 
@@ -21,7 +20,7 @@ const navItems = [
   <!-- 지금 날씨·시각·계절에 맞춘 배경. 화면 전체에 깔린다. -->
   <WeatherScene />
 
-  <div class="app">
+  <div id="top" class="app">
     <header class="app-header">
       <RouterLink to="/" class="brand">
         <ShoeMark :size="38" />
@@ -54,7 +53,7 @@ const navItems = [
     <footer class="app-foot">
       <span>SKALA Vue 실습 · OpenWeatherMap · Open-Meteo</span>
       <RouterLink to="/troubleshooting" class="foot-link">트러블슈팅</RouterLink>
-      <RouterLink to="/practice/3" class="foot-link">지난 과제</RouterLink>
+      <RouterLink to="/about" class="foot-link">소개</RouterLink>
     </footer>
   </div>
 </template>

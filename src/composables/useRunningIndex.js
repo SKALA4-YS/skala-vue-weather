@@ -9,6 +9,10 @@
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
 
+// 값이 없거나 숫자가 아니면 기본값으로 대신한다.
+// 1~3일차 화면처럼 일부 항목(바람 등)이 없는 데이터도 그대로 계산할 수 있어야 한다.
+const num = (value, fallback = 0) => (typeof value === 'number' && !Number.isNaN(value) ? value : fallback)
+
 // 기온: 10~18도를 기준 구간으로 두고 양쪽으로 멀어질수록 깎는다.
 // 더울수록 기울기를 키운다. 추위는 옷으로 어느 정도 버티지만 폭염은 그렇지 않다.
 const scoreTemp = (temp) => {
@@ -68,37 +72,30 @@ const GRADES = [
   { min: 0, label: '위험', severity: 'danger', comment: '야외 러닝은 피하는 게 좋습니다.' },
 ]
 
-const gradeOf = (score) => GRADES.find((grade) => score >= grade.min)
+// score가 NaN이면 find가 아무것도 못 찾으므로 마지막 등급으로 떨어뜨린다
+const gradeOf = (score) => GRADES.find((grade) => score >= grade.min) ?? GRADES[GRADES.length - 1]
 
 /**
  * 날씨 한 시점의 러닝 점수와 감점 내역을 계산한다.
  * @param {object} weather temp, humidity, pm10, wind, rainProb, uvIndex(선택)
  */
 export const calcRunningIndex = (weather) => {
+  // 습도는 없으면 50%(무난한 값), 나머지는 0을 기본으로 둔다
+  const temp = num(weather.temp)
+  const humidity = num(weather.humidity, 50)
+  const pm10 = num(weather.pm10)
+  const wind = num(weather.wind)
+  const rainProb = num(weather.rainProb)
+
   const factors = [
-    { key: 'temp', label: '기온', value: `${weather.temp}°C`, delta: scoreTemp(weather.temp) },
-    {
-      key: 'humidity',
-      label: '습도',
-      value: `${weather.humidity}%`,
-      delta: scoreHumidity(weather.humidity),
-    },
-    {
-      key: 'pm10',
-      label: '미세먼지',
-      value: `${weather.pm10}㎍/㎥`,
-      delta: scorePm10(weather.pm10),
-    },
-    { key: 'wind', label: '바람', value: `${weather.wind}m/s`, delta: scoreWind(weather.wind) },
-    {
-      key: 'rain',
-      label: '강수확률',
-      value: `${weather.rainProb}%`,
-      delta: scoreRain(weather.rainProb),
-    },
+    { key: 'temp', label: '기온', value: `${temp}°C`, delta: scoreTemp(temp) },
+    { key: 'humidity', label: '습도', value: `${humidity}%`, delta: scoreHumidity(humidity) },
+    { key: 'pm10', label: '미세먼지', value: `${pm10}㎍/㎥`, delta: scorePm10(pm10) },
+    { key: 'wind', label: '바람', value: `${wind}m/s`, delta: scoreWind(wind) },
+    { key: 'rain', label: '강수확률', value: `${rainProb}%`, delta: scoreRain(rainProb) },
   ]
 
-  if (weather.uvIndex !== null && weather.uvIndex !== undefined) {
+  if (typeof weather.uvIndex === 'number' && !Number.isNaN(weather.uvIndex)) {
     factors.push({
       key: 'uv',
       label: '자외선',
