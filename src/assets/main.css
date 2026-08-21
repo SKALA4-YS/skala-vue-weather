@@ -1,0 +1,137 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
+/* 기본은 라이트(화이트-블루). 다크는 html.dark 아래에서 같은 토큰을 덮어쓴다.
+   Element Plus 변수(--el-*)도 함께 지정해서 라이브러리와 색이 어긋나지 않게 한다. */
+:root {
+  --bg: #eef4fb;
+  --bg-grad: linear-gradient(180deg, #dcecfb 0%, #eef4fb 42%, #f6f9fd 100%);
+  --surface: #ffffff;
+  --surface-2: #f2f7fd;
+  --line: #d5e3f2;
+  --line-soft: #e6eff9;
+
+  --text: #14243a;
+  --text-dim: #52708f;
+  --text-faint: #8ba3bd;
+
+  --accent: #0a84ff;
+  --accent-strong: #0060df;
+  --accent-soft: #d9ebff;
+  --on-accent: #ffffff;
+
+  --cyan: #00b8d4;
+  --warn: #f08c00;
+  --danger: #e5484d;
+
+  --radius: 16px;
+  --radius-sm: 12px;
+  --shadow: 0 1px 2px rgba(20, 50, 90, 0.06), 0 8px 24px rgba(20, 50, 90, 0.06);
+}
+
+html.dark {
+  --bg: #0a0e14;
+  --bg-grad: linear-gradient(180deg, #101823 0%, #0a0e14 60%);
+  --surface: #141a22;
+  --surface-2: #1b232d;
+  --line: #263040;
+  --line-soft: #1e2732;
+
+  --text: #e9eef4;
+  --text-dim: #93a1b3;
+  --text-faint: #5f6d7e;
+
+  --accent: #35a0ff;
+  --accent-strong: #58b4ff;
+  --accent-soft: #14263a;
+  --on-accent: #06101c;
+
+  --cyan: #35d6ee;
+  --warn: #ffb020;
+  --danger: #ff5470;
+
+  --shadow: none;
+}
+
+/* Element Plus 색 맞추기 */
+:root {
+  --el-color-primary: #0a84ff;
+  --el-color-primary-light-3: #4da3ff;
+  --el-color-primary-light-5: #85c0ff;
+  --el-color-primary-light-7: #bcdcff;
+  --el-color-primary-light-8: #d9ebff;
+  --el-color-primary-light-9: #eaf4ff;
+  --el-color-primary-dark-2: #0060df;
+  --el-border-radius-base: 10px;
+}
+
+html.dark {
+  --el-color-primary: #35a0ff;
+  --el-bg-color: var(--surface);
+  --el-bg-color-overlay: var(--surface-2);
+  --el-bg-color-page: var(--bg);
+  --el-text-color-primary: var(--text);
+  --el-text-color-regular: var(--text-dim);
+  --el-text-color-secondary: var(--text-faint);
+  --el-border-color: var(--line);
+  --el-border-color-light: var(--line-soft);
+  --el-border-color-lighter: var(--line-soft);
+  --el-fill-color-blank: var(--surface-2);
+  --el-fill-color-light: var(--surface-2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: var(--bg-grad) fixed;
+  color: var(--text);
+  font-family:
+    'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* 숫자를 크게 쓰는 화면이라 자릿수가 흔들리지 않게 고정폭 숫자를 쓴다 */
+.num {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* 섹션 제목. 이모지 대신 작은 라벨로 위계를 만든다 */
+.section-label {
+  margin: 0 0 10px;
+  color: var(--text-faint);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.surface {
+  padding: 18px;
+  background-color: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+input,
+select,
+button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* primary 버튼은 파란 배경에 흰 글씨가 기본이라 그대로 두고, 굵기만 올린다 */
+.el-button--primary {
+  font-weight: 600;
+}
