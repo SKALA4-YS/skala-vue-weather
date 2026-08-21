@@ -13,6 +13,8 @@ Vue 3 + Vite로 만든 날씨 대시보드입니다. 일곱 개의 과제를 한
 | 주간 계획 | `/week` | 5일 예보 기반 "언제 뛸까" |
 | 지역 순위 | `/ranking` | 기온·미세먼지 순위 |
 | 상세 관측 | `/weather/:cityId` | 관측값, 시간별·일별 예보, 일출/자외선 |
+| 실습 기록 | `/lab` | 1~7일차에 무엇을 구현했는지 |
+| 트러블슈팅 | `/troubleshooting` | 막혔던 12건 (증상 → 원인 → 해결) |
 | 지난 과제 | `/practice/:day` | 1~3일차 과제 보관함 |
 
 - **과제 1 (Mockup)** — 배열/조건부 렌더링, 폼 바인딩, 이벤트 수식어, 컴포넌트 분리, Scoped Style
@@ -45,7 +47,8 @@ API Key가 없으면 샘플 데이터로 화면이 뜨고, 상단에 "샘플 데
 - Axios 1
 - Element Plus 2 (라이트/다크 테마 + CSS 변수 커스터마이즈)
 - Pretendard (웹폰트)
-- Chart.js 4
+- Chart.js 4 (시간대별 그래프)
+- Leaflet (러닝 지도)
 - Vite 8
 
 ## 파일 구성
@@ -68,6 +71,7 @@ src/
     openMeteoApi.js        Open-Meteo 호출 (30개 지역 배치 조회 · 자외선 · 일출/일몰)
   data/
     cities.js              전국 30개 지역 좌표와 권역
+    practiceLog.js         실습 기록과 트러블슈팅 (두 화면이 공유)
   components/
     WeatherCard.vue        도시 한 곳의 카드 (과제 1 · 2가 공유)
     DustBadge.vue          미세먼지 등급 배지 (전 과제 공유)
@@ -85,6 +89,7 @@ src/
       LineChart.vue          Chart.js 래퍼 (시간대별 지수 그래프)
       HeroPanel.vue          대시보드 상단 요약
       ThemeToggler.vue       라이트/다크 전환
+      RunningMap.vue         전국 러닝 지수 지도 (Leaflet)
       ForecastStrip.vue      시간대별 예보 가로 목록
   views/                   페이지 단위 컴포넌트 보관 폴더
     WeatherHomeView.vue    메인 날씨 대시보드 화면 (WeatherParent 대체)
@@ -93,6 +98,8 @@ src/
     NotFoundView.vue       정의되지 않은 경로 접근 시 (Catch-all Route)
     RunningIndexView.vue   러닝 지수 화면 (Element Plus 집중 적용)
     WeekPlanView.vue       주간 계획 (5일 예보)
+    PracticeLabView.vue    실습 아카이브
+    TroubleshootingView.vue 트러블슈팅 기록
     WeatherRankingView.vue 기온·미세먼지 순위표 (추가 view)
     PracticeArchiveView.vue 1~3일차 과제 보관함 (추가 view, /practice/:day)
     Assignment1.vue        과제 1 화면 (Mockup)
@@ -1570,3 +1577,72 @@ const toDailyItems = (forecast) => {
 - 대시보드를 `1.7fr / 1fr` 2단으로 나눠 왼쪽은 요약, 오른쪽은 내 위치·데이터 상태
 - 지역 카드는 `repeat(auto-fill, minmax(230px, 1fr))` 그리드라 화면 폭에 따라 2~4열로 접힘
 - 숫자에 `font-variant-numeric: tabular-nums`를 걸어 값이 바뀔 때 자릿수가 흔들리지 않게 함
+
+---
+
+# 러닝 지도와 실습 기록
+
+## 전국 러닝 지도 (Leaflet)
+
+대시보드 가운데에 30개 지역의 러닝 지수를 지도로 뿌립니다.
+핀을 누르면 상단 요약이 그 지역으로 바뀌어, 카드를 누르는 것과 같은 동작을 합니다.
+
+지도 타일은 CARTO의 무료 타일을 쓰고 테마에 따라 밝은/어두운 타일로 바꿉니다. 키가 필요 없습니다.
+
+구현하면서 걸린 것이 세 가지 있었습니다.
+
+**① 기본 마커 이미지가 깨집니다.** Leaflet의 기본 아이콘은 상대 경로로 PNG를 참조하는데
+Vite 번들에서는 그 경로가 유지되지 않습니다. `divIcon`으로 HTML 마커를 만들어 해결했고,
+덕분에 점수를 마커 안에 직접 그릴 수 있게 됐습니다.
+
+**② 마커 스타일에 `scoped`가 먹지 않습니다.** Leaflet이 마커를 자바스크립트로 DOM에 직접 넣기 때문에
+Vue가 붙이는 `data-v` 속성이 없습니다. 마커 스타일만 전역 `<style>`로 분리하고
+클래스에 `run-` 접두사를 붙여 충돌을 막았습니다.
+
+**③ 마운트 직후 `fitBounds`가 엉뚱하게 축소됩니다.** 그 시점에 Leaflet은 컨테이너 크기를 0으로 알고 있습니다.
+
+```js
+nextTick(() => {
+  map.invalidateSize()
+  map.fitBounds(bounds, { padding: [30, 30] })
+})
+```
+
+한국은 세로로 긴 지형이라 넓은 컨테이너에 넣으면 좌우 여백만 커집니다.
+그래서 지도를 좁게 두고 옆에 상위 5개 지역 순위를 붙였습니다.
+
+## 실습 기록 (`/lab`)과 트러블슈팅 (`/troubleshooting`)
+
+`data/practiceLog.js` 한 곳에 기록을 두고 두 화면이 함께 읽습니다.
+
+- **실습 기록** — 일차별로 무엇을 구현했는지, 어떤 문법을 썼는지
+- **트러블슈팅** — 실제로 막혔던 12건. 해결 방법만 적지 않고 **왜 그런 일이 생겼는지**를 함께 남겼습니다.
+  태그(API · 반응형 · 라우터 · 스토어 · UI · 스타일 · 의존성 · 보안)로 걸러 볼 수 있습니다.
+
+기록된 항목 예시입니다.
+
+| 일차 | 문제 | 원인 |
+| --- | --- | --- |
+| 1 | 한글 입력 시 글자가 깨짐 | IME 조합 중인 값을 상태에 넣어 조합 버퍼가 끊김 |
+| 3 | scoped 스타일이 slot에 안 먹음 | 슬롯 내용은 부모 스코프에서 컴파일됨 |
+| 4 | 상세→상세 이동 시 내용 그대로 | 같은 경로 규칙이면 컴포넌트를 재사용해 onMounted 미실행 |
+| 6 | 실제 키를 `.env.example`에 넣음 | 커밋되는 파일과 아닌 파일을 혼동 |
+| 7 | 30개 지역 확대 후 429 | 30 × 3콜 = 90회로 분당 60회 한도 초과 |
+| 7 | 다크 모드에서 차트 색만 그대로 | Chart.js는 캔버스라 CSS 변수를 못 읽음 |
+
+## 커밋 기록
+
+작업을 논리 단위로 나눠 커밋했습니다.
+
+```
+chore: Vue 3 + Vite 프로젝트 설정
+feat: 1~2일차 실습 (Mockup / Composition)
+feat: 3일차 실습 (Component 분리)
+feat: 4일차 실습 (Vue Router)
+feat: 5일차 실습 (Pinia)
+feat: 6일차 실습 (Axios API 연동)
+feat: 7일차 실습 (Element Plus + 러닝 지수 컨셉)
+docs: README와 개념 정리 노트
+feat: 전국 러닝 지도 (Leaflet)
+feat: 실습 아카이브와 트러블슈팅 페이지
+```
