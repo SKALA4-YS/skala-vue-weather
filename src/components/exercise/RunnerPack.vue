@@ -32,12 +32,20 @@ const runners = [
           <path class="line arm arm-back" :fill="runner.body" d="M-13 -14 L-19 -9 L-16 -6 L-11 -11 Z" />
           <path class="line arm arm-front" :fill="runner.body" d="M13 -14 L20 -12 L19 -8 L12 -10 Z" />
 
-          <!-- 얼굴 -->
-          <ellipse :fill="runner.accent" cx="-7.5" cy="-11" rx="3.4" ry="2.2" opacity="0.85" />
-          <ellipse :fill="runner.accent" cx="7.5" cy="-11" rx="3.4" ry="2.2" opacity="0.85" />
-          <circle class="ink" cx="-4.5" cy="-15" r="1.5" />
-          <circle class="ink" cx="4.5" cy="-15" r="1.5" />
-          <path class="ink-stroke" d="M-2.4 -10.6 Q0 -8.4 2.4 -10.6" />
+          <!-- 얼굴. 볼터치에 빗금을 세 개 긋고 눈은 아래로 휜 곡선으로 그린다 -->
+          <ellipse :fill="runner.accent" cx="-8" cy="-10.5" rx="3.6" ry="2.3" opacity="0.9" />
+          <ellipse :fill="runner.accent" cx="8" cy="-10.5" rx="3.6" ry="2.3" opacity="0.9" />
+          <g class="hatch">
+            <path d="M-9.4 -11.6 L-9.9 -9.4" />
+            <path d="M-8 -11.8 L-8.5 -9.3" />
+            <path d="M-6.6 -11.6 L-7.1 -9.4" />
+            <path d="M9.4 -11.6 L8.9 -9.4" />
+            <path d="M8 -11.8 L7.5 -9.3" />
+            <path d="M6.6 -11.6 L6.1 -9.4" />
+          </g>
+          <path class="ink-stroke" d="M-6.6 -15.4 Q-4.6 -17.4 -2.6 -15.4" />
+          <path class="ink-stroke" d="M2.6 -15.4 Q4.6 -17.4 6.6 -15.4" />
+          <path class="ink-stroke mouth" d="M-2.6 -12.4 Q-1.3 -10.6 0 -12.4 Q1.3 -10.6 2.6 -12.4" />
         </g>
       </svg>
     </div>
@@ -59,11 +67,20 @@ const runners = [
           <path class="line arm arm-back" fill="#fdf3d0" d="M-13 -14 L-19 -9 L-16 -6 L-11 -11 Z" />
           <path class="line arm arm-front" fill="#fdf3d0" d="M13 -14 L20 -12 L19 -8 L12 -10 Z" />
 
-          <ellipse fill="#f6b8c6" cx="-7.5" cy="-11" rx="3.4" ry="2.2" opacity="0.85" />
-          <ellipse fill="#f6b8c6" cx="7.5" cy="-11" rx="3.4" ry="2.2" opacity="0.85" />
-          <circle class="ink" cx="-4.5" cy="-15" r="1.5" />
-          <circle class="ink" cx="4.5" cy="-15" r="1.5" />
-          <path class="ink-stroke" d="M-2.4 -10.6 Q0 -8.4 2.4 -10.6" />
+          <ellipse fill="#f6b8c6" cx="-8" cy="-10.5" rx="3.6" ry="2.3" opacity="0.9" />
+          <ellipse fill="#f6b8c6" cx="8" cy="-10.5" rx="3.6" ry="2.3" opacity="0.9" />
+          <g class="hatch">
+            <path d="M-9.4 -11.6 L-9.9 -9.4" />
+            <path d="M-8 -11.8 L-8.5 -9.3" />
+            <path d="M-6.6 -11.6 L-7.1 -9.4" />
+            <path d="M9.4 -11.6 L8.9 -9.4" />
+            <path d="M8 -11.8 L7.5 -9.3" />
+            <path d="M6.6 -11.6 L6.1 -9.4" />
+          </g>
+          <!-- 우사기는 눈을 사선으로 그어 다른 둘과 구분한다 -->
+          <path class="ink-stroke" d="M-6 -17 L-3 -14" />
+          <path class="ink-stroke" d="M6 -17 L3 -14" />
+          <path class="ink-stroke mouth" d="M-3.2 -12.6 Q-1.6 -10.2 0 -12.6 Q1.6 -10.2 3.2 -12.6" />
         </g>
       </svg>
     </div>
@@ -101,8 +118,20 @@ const runners = [
 .ink-stroke {
   fill: none;
   stroke: #1d2733;
-  stroke-width: 1.8;
+  stroke-width: 1.7;
   stroke-linecap: round;
+}
+
+.mouth {
+  stroke-width: 1.5;
+}
+
+.hatch path {
+  fill: none;
+  stroke: #1d2733;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  opacity: 0.7;
 }
 
 :global(html.dark) .line {
@@ -113,7 +142,8 @@ const runners = [
   fill: #0b1119;
 }
 
-:global(html.dark) .ink-stroke {
+:global(html.dark) .ink-stroke,
+:global(html.dark) .hatch path {
   stroke: #0b1119;
 }
 
@@ -142,7 +172,8 @@ const runners = [
   }
 }
 
-/* 셋째는 한참 쉬었다가 한 번씩 빠르게. 46초 중 앞의 30%(약 14초)만 달린다 */
+/* 셋째는 한참 쉬었다가 한 번씩 빠르게.
+   느린 둘이 46초에 걸쳐 가는 거리를 20% 구간(약 9초)에 통과하므로 다섯 배 빠르다. */
 .dash {
   position: absolute;
   bottom: 10px;
@@ -153,7 +184,7 @@ const runners = [
   0% {
     left: -14%;
   }
-  30% {
+  20% {
     left: 110%;
   }
   100% {
@@ -177,10 +208,10 @@ const runners = [
 
 @keyframes whoosh {
   0%,
-  30% {
+  20% {
     opacity: 1;
   }
-  30.1%,
+  20.1%,
   100% {
     opacity: 0;
   }
@@ -192,7 +223,7 @@ const runners = [
 }
 
 .fast {
-  animation-duration: 0.16s;
+  animation-duration: 0.11s;
 }
 
 @keyframes bob {
@@ -230,7 +261,7 @@ const runners = [
 .fast .leg-back,
 .fast .arm-front,
 .fast .arm-back {
-  animation-duration: 0.16s;
+  animation-duration: 0.11s;
 }
 
 @keyframes stride {
