@@ -82,8 +82,11 @@ const navItems = [
   place-items: center;
   width: 34px;
   height: 34px;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  background: linear-gradient(140deg, #5cb0ff 0%, var(--accent) 45%, var(--accent-strong) 100%);
   border-radius: 11px;
+  box-shadow:
+    0 3px 8px rgba(10, 132, 255, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
   color: #fff;
   font-size: 13px;
   font-weight: 800;
@@ -121,16 +124,16 @@ const navItems = [
   background-color: var(--surface);
   border: 1px solid var(--line-soft);
   border-radius: 999px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), var(--edge);
   overflow-x: auto;
 }
 
 .nav-item {
   flex: 1;
-  padding: 8px 12px;
+  padding: 9px 12px;
   border-radius: 999px;
   color: var(--text-dim);
-  font-size: 13px;
+  font-size: 14px;
   text-align: center;
   text-decoration: none;
   white-space: nowrap;
@@ -145,9 +148,10 @@ const navItems = [
 
 /* '/'는 모든 경로의 접두사라 exact 쪽을 써야 항상 켜져 있지 않다 */
 .nav-item.router-link-exact-active {
-  background-color: var(--accent);
+  background-image: linear-gradient(180deg, #3d9bff 0%, var(--accent) 100%);
   color: var(--on-accent);
-  font-weight: 600;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(10, 132, 255, 0.4);
 }
 
 .app-main {

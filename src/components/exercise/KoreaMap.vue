@@ -3,9 +3,16 @@ import { computed, ref } from 'vue'
 import { provinces, project, MAP_W, MAP_H } from '../../data/koreaMap'
 import { calcRunningIndex } from '../../composables/useRunningIndex'
 
-// 남한만 그리는 SVG 지도. 타일 지도를 쓰면 주변국까지 나와 산만해서 직접 그린다.
-// 경계는 통계청 시도 경계를 간략화해 path로 내장했고,
-// 마커는 같은 투영식으로 위경도를 SVG 좌표로 옮긴다.
+/* 남한만 그리는 지도. 타일 지도를 쓰면 주변국까지 나와 산만해서 직접 그린다.
+
+   비스듬히 내려다보는 각도를 만들려고 세로를 TILT배로 눌렀다.
+   SVG의 scale(1, TILT)은 좌표계가 그대로라 마커 위치를 같은 식으로 계산할 수 있다.
+   (CSS rotateX는 원근이 섞여 마커와 어긋난다)
+
+   지역은 점수만큼 솟는 기둥으로 표시한다. 색만 쓸 때보다 높낮이가 먼저 읽힌다. */
+
+const TILT = 0.62
+
 const props = defineProps({
   cities: {
     type: Array,
@@ -31,14 +38,11 @@ const scoreOf = (city) =>
   }).score
 
 const colorOf = (score) => {
-  if (score >= 70) return 'var(--accent)'
-  if (score >= 55) return 'var(--cyan)'
-  if (score >= 40) return 'var(--warn)'
-  return 'var(--danger)'
+  if (score >= 70) return '#22c55e'
+  if (score >= 55) return '#0a84ff'
+  if (score >= 40) return '#f59e0b'
+  return '#ef4444'
 }
-
-// 점수가 높을수록 원을 키운다. 겹치는 수도권에서도 좋은 곳이 먼저 눈에 띈다.
-const radiusOf = (score) => 11 + (score / 100) * 9
 
 const points = computed(() =>
   props.cities.map((city) => {
@@ -49,42 +53,45 @@ const points = computed(() =>
       city,
       score,
       x,
-      y,
-      r: radiusOf(score),
+      baseY: y * TILT, // 지도와 같은 비율로 눌러 준다
+      height: 26 + (score / 100) * 96, // 점수만큼 솟는 기둥
       color: colorOf(score),
       active: city.id === props.selectedId || city.id === hoveredId.value,
     }
   }),
 )
 
-// 점수가 낮은 것부터 그려서 좋은 곳이 위에 오게 한다
-const sortedPoints = computed(() => [...points.value].sort((a, b) => a.score - b.score))
+// 위쪽(북쪽)부터 그려야 아래 기둥이 위 기둥을 가린다
+const drawOrder = computed(() => [...points.value].sort((a, b) => a.baseY - b.baseY))
 
-const selectedPoint = computed(() => points.value.find((p) => p.city.id === props.selectedId))
+const viewBox = computed(() => `-30 -150 ${MAP_W + 60} ${MAP_H * TILT + 190}`)
 </script>
 
 <template>
   <div class="map-wrap">
-    <svg :viewBox="`0 0 ${MAP_W} ${MAP_H}`" class="map" role="img" aria-label="전국 러닝 지수 지도">
+    <svg :viewBox="viewBox" class="map" role="img" aria-label="전국 러닝 지수 지도">
       <defs>
-        <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur stdDeviation="6" result="b" />
-          <feMerge>
-            <feMergeNode in="b" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
+        <linearGradient id="landFace" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--map-top)" />
+          <stop offset="100%" stop-color="var(--map-bottom)" />
+        </linearGradient>
       </defs>
 
-      <!-- 시도 경계 -->
-      <g class="land">
-        <path v-for="province in provinces" :key="province.name" :d="province.d" />
+      <!-- 아래로 조금 내린 어두운 복사본이 지도의 '두께'가 된다 -->
+      <g :transform="`scale(1, ${TILT})`">
+        <g class="land-side" transform="translate(0, 26)">
+          <path v-for="province in provinces" :key="province.name" :d="province.d" />
+        </g>
+
+        <g class="land-face">
+          <path v-for="province in provinces" :key="province.name" :d="province.d" />
+        </g>
       </g>
 
-      <!-- 지역 마커 -->
+      <!-- 기둥은 눌린 좌표 위에 세우므로 scale 밖에 둔다 -->
       <g class="pins">
         <g
-          v-for="point in sortedPoints"
+          v-for="point in drawOrder"
           :key="point.city.id"
           class="pin"
           :class="point.active ? 'is-active' : ''"
@@ -92,25 +99,41 @@ const selectedPoint = computed(() => points.value.find((p) => p.city.id === prop
           @mouseenter="hoveredId = point.city.id"
           @mouseleave="hoveredId = ''"
         >
-          <circle
-            v-if="point.active"
-            class="halo"
-            :cx="point.x"
-            :cy="point.y"
-            :r="point.r + 9"
-            :fill="point.color"
-          />
-          <circle
-            :cx="point.x"
-            :cy="point.y"
-            :r="point.r"
-            :fill="point.color"
-            :filter="point.active ? 'url(#glow)' : undefined"
-          />
-          <text class="pin-score" :x="point.x" :y="point.y + 4.2">{{ point.score }}</text>
+          <!-- 바닥 그림자 -->
+          <ellipse class="pin-shadow" :cx="point.x" :cy="point.baseY" rx="11" ry="4" />
 
-          <!-- 이름은 고르거나 올렸을 때만. 30개를 다 쓰면 수도권이 겹쳐 읽히지 않는다 -->
-          <text v-if="point.active" class="pin-name" :x="point.x" :y="point.y - point.r - 9">
+          <!-- 기둥. 오른쪽에 어두운 면을 덧대 입체로 보이게 한다 -->
+          <rect
+            class="pin-bar"
+            :x="point.x - 5"
+            :y="point.baseY - point.height"
+            width="10"
+            :height="point.height"
+            rx="4"
+            :fill="point.color"
+          />
+          <rect
+            class="pin-bar-side"
+            :x="point.x + 1.5"
+            :y="point.baseY - point.height"
+            width="3.5"
+            :height="point.height"
+            rx="1.6"
+          />
+
+          <!-- 꼭대기 점수 알약 -->
+          <g class="pin-cap" :transform="`translate(${point.x}, ${point.baseY - point.height})`">
+            <rect class="cap-box" x="-17" y="-14" width="34" height="22" rx="11" :fill="point.color" />
+            <text class="cap-score" x="0" y="1.5">{{ point.score }}</text>
+          </g>
+
+          <!-- 이름은 고르거나 마우스를 올렸을 때만. 30개를 다 쓰면 수도권이 겹쳐 못 읽는다 -->
+          <text
+            v-if="point.active"
+            class="pin-name"
+            :x="point.x"
+            :y="point.baseY - point.height - 26"
+          >
             {{ point.city.name }}
           </text>
         </g>
@@ -118,22 +141,30 @@ const selectedPoint = computed(() => points.value.find((p) => p.city.id === prop
     </svg>
 
     <div class="legend">
-      <span><i style="background: var(--accent)" />70+</span>
-      <span><i style="background: var(--cyan)" />55+</span>
-      <span><i style="background: var(--warn)" />40+</span>
-      <span><i style="background: var(--danger)" />40 미만</span>
-      <span class="legend-note">원이 클수록 뛰기 좋은 곳</span>
+      <span><i style="background: #22c55e" />70+</span>
+      <span><i style="background: #0a84ff" />55+</span>
+      <span><i style="background: #f59e0b" />40+</span>
+      <span><i style="background: #ef4444" />40 미만</span>
+      <span class="legend-note">기둥이 높을수록 뛰기 좋은 곳</span>
     </div>
-
-    <p v-if="selectedPoint === undefined" class="hint">지도에서 지역을 골라 보세요</p>
   </div>
 </template>
 
 <style scoped>
 .map-wrap {
+  --map-top: #ffffff;
+  --map-bottom: #c8dcf3;
+  --map-side: #93b4d8;
+
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+:global(html.dark) .map-wrap {
+  --map-top: #202a36;
+  --map-bottom: #161d27;
+  --map-side: #0d131a;
 }
 
 .map {
@@ -143,84 +174,107 @@ const selectedPoint = computed(() => points.value.find((p) => p.city.id === prop
   overflow: visible;
 }
 
-.land path {
-  fill: var(--surface-2);
-  stroke: var(--line);
-  stroke-width: 1.4;
+.land-face path {
+  fill: url(#landFace);
+  stroke: #8fb2d6;
+  stroke-width: 1.3;
   stroke-linejoin: round;
-  transition: fill 0.2s ease;
+}
+
+:global(html.dark) .land-face path {
+  stroke: #33415a;
+}
+
+.land-side path {
+  fill: var(--map-side);
+  stroke: var(--map-side);
+  stroke-width: 2;
+  stroke-linejoin: round;
 }
 
 .pin {
   cursor: pointer;
 }
 
-.pin circle {
-  transition:
-    r 0.18s ease,
-    opacity 0.18s ease;
+.pin-shadow {
+  fill: rgba(20, 45, 80, 0.22);
 }
 
-.halo {
-  opacity: 0.22;
+:global(html.dark) .pin-shadow {
+  fill: rgba(0, 0, 0, 0.45);
 }
 
-.pin-score {
+.pin-bar-side {
+  fill: rgba(0, 0, 0, 0.22);
+}
+
+.pin-cap {
+  transition: transform 0.16s ease;
+}
+
+.cap-box {
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+:global(html.dark) .cap-box {
+  stroke: #0d131a;
+}
+
+.cap-score {
   fill: #fff;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
   text-anchor: middle;
   pointer-events: none;
   font-variant-numeric: tabular-nums;
 }
 
+.is-active .cap-box {
+  stroke-width: 3;
+}
+
+.is-active .pin-bar,
+.is-active .cap-box {
+  filter: drop-shadow(0 4px 10px rgba(10, 132, 255, 0.45));
+}
+
 .pin-name {
   fill: var(--text);
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 21px;
+  font-weight: 800;
   text-anchor: middle;
   pointer-events: none;
   paint-order: stroke;
   stroke: var(--surface);
-  stroke-width: 4px;
+  stroke-width: 5px;
   stroke-linejoin: round;
-}
-
-.is-active .pin-score {
-  font-size: 13px;
 }
 
 .legend {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 6px;
+  gap: 12px;
+  margin-top: 4px;
   color: var(--text-dim);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .legend span {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .legend i {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
 }
 
 .legend-note {
   margin-left: auto;
   color: var(--text-faint);
-}
-
-.hint {
-  margin: 4px 0 0;
-  color: var(--text-faint);
-  font-size: 11px;
-  text-align: center;
 }
 </style>

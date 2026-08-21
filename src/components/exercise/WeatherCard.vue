@@ -131,16 +131,22 @@ const outfitTips = computed(() => {
   background-color: var(--surface);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius-sm);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), var(--edge);
   cursor: pointer;
   transition:
-    border-color 0.15s ease,
-    transform 0.15s ease;
+    border-color 0.16s ease,
+    transform 0.16s ease,
+    box-shadow 0.16s ease;
 }
 
 .card:hover {
   border-color: var(--accent);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift), var(--edge);
+}
+
+.card:active {
+  transform: translateY(-1px);
 }
 
 .is-selected {
@@ -159,13 +165,13 @@ const outfitTips = computed(() => {
 }
 
 .name {
-  font-size: 15px;
+  font-size: 16.5px;
   font-weight: 700;
 }
 
 .area {
   color: var(--text-faint);
-  font-size: 10.5px;
+  font-size: 11.5px;
 }
 
 .mid {
@@ -180,19 +186,19 @@ const outfitTips = computed(() => {
 }
 
 .temp {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 800;
   line-height: 1.1;
 }
 
 .status {
   color: var(--text-dim);
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .sub {
   color: var(--text-dim);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .tips {
@@ -203,11 +209,11 @@ const outfitTips = computed(() => {
 }
 
 .tip {
-  padding: 1px 7px;
+  padding: 2px 9px;
   background-color: var(--surface-2);
   border-radius: 999px;
   color: var(--text-dim);
-  font-size: 10.5px;
+  font-size: 11.5px;
 }
 
 .foot {
@@ -220,14 +226,14 @@ const outfitTips = computed(() => {
 }
 
 .score {
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 800;
 }
 
 .grade {
   margin-left: 5px;
   color: var(--text-faint);
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 400;
 }
 

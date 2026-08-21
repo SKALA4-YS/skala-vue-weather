@@ -368,7 +368,7 @@ const handleHotUpdate = (newHot) => {
 
 .stage {
   display: grid;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: 460px 1fr;
   gap: 16px;
   align-items: start;
 }
@@ -376,14 +376,13 @@ const handleHotUpdate = (newHot) => {
 .map-col {
   display: flex;
   flex-direction: column;
-  min-height: 700px;
   padding: 18px;
   background:
     radial-gradient(90% 60% at 50% 0%, var(--accent-soft) 0%, transparent 55%),
     var(--surface);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), var(--edge);
 }
 
 .map-head {
@@ -399,7 +398,7 @@ const handleHotUpdate = (newHot) => {
 
 .map-count {
   color: var(--text-faint);
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .info-col {
@@ -428,6 +427,15 @@ const handleHotUpdate = (newHot) => {
 
 .top-item:hover {
   border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.top-item {
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .top-item.is-on {
@@ -436,29 +444,29 @@ const handleHotUpdate = (newHot) => {
 }
 
 .top-rank {
-  width: 14px;
+  width: 16px;
   color: var(--text-faint);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
 }
 
 .top-name {
   flex-grow: 1;
   color: var(--text);
-  font-size: 13px;
+  font-size: 14.5px;
   font-weight: 600;
 }
 
 .top-name em {
-  margin-left: 4px;
+  margin-left: 5px;
   color: var(--text-faint);
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-style: normal;
   font-weight: 400;
 }
 
 .top-score {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 800;
 }
 
@@ -481,7 +489,7 @@ const handleHotUpdate = (newHot) => {
 .loc-desc {
   margin-bottom: 10px !important;
   color: var(--text-dim);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .loc-actions {
@@ -516,12 +524,12 @@ const handleHotUpdate = (newHot) => {
 }
 
 .area-tab {
-  padding: 5px 13px;
+  padding: 6px 15px;
   background-color: var(--surface-2);
   border: 1px solid var(--line-soft);
   border-radius: 999px;
   color: var(--text-dim);
-  font-size: 12.5px;
+  font-size: 13.5px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -548,7 +556,7 @@ const handleHotUpdate = (newHot) => {
 .summary {
   margin: 0 0 10px;
   color: var(--text-faint);
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .card-grid {

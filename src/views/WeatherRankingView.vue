@@ -7,6 +7,7 @@ import DustBadge from '../components/DustBadge.vue'
 import { useWeatherStore } from '../stores/weatherStore'
 import { useConfigStore } from '../stores/configStore'
 import { convertTemp } from '../composables/useDisplayTemp'
+import { calcRunningIndex } from '../composables/useRunningIndex'
 
 /* ════════════════════════════════════════════════
    [요구사항 6] 추가 view ① — '/ranking'
@@ -36,7 +37,25 @@ onMounted(() => {
 const tempText = (rawTemp) => `${convertTemp(rawTemp, configStore.unit)}${configStore.unitSymbol}`
 
 // route.query는 반응형이다. 주소가 바뀌면 이 computed도 다시 계산된다.
-const sortBy = computed(() => (route.query.by === 'pm10' ? 'pm10' : 'temp'))
+const TABS = [
+  { key: 'running', label: '뛰기 좋은 순' },
+  { key: 'temp', label: '기온 높은 순' },
+  { key: 'pm10', label: '공기 좋은 순' },
+]
+
+const sortBy = computed(() => {
+  const by = route.query.by
+  return TABS.some((tab) => tab.key === by) ? by : 'running'
+})
+
+const scoreOf = (city) =>
+  calcRunningIndex({
+    temp: city.temp,
+    humidity: city.humidity,
+    pm10: city.pm10,
+    wind: city.wind,
+    rainProb: city.rainProb,
+  })
 
 const rankedList = computed(() => {
   // 원본 배열을 건드리지 않도록 복사한 뒤 정렬한다. (sort는 원본을 바꾼다)
@@ -46,8 +65,18 @@ const rankedList = computed(() => {
     // 미세먼지는 낮을수록 좋은 값이라 오름차순
     return copied.sort((a, b) => a.pm10 - b.pm10)
   }
-  return copied.sort((a, b) => b.temp - a.temp)
+  if (sortBy.value === 'temp') {
+    return copied.sort((a, b) => b.temp - a.temp)
+  }
+  return copied.sort((a, b) => scoreOf(b).score - scoreOf(a).score)
 })
+
+const colorOf = (score) => {
+  if (score >= 70) return 'var(--accent)'
+  if (score >= 55) return 'var(--cyan)'
+  if (score >= 40) return 'var(--warn)'
+  return 'var(--danger)'
+}
 
 // 정렬 기준 변경 = 화면 이동이 아니라 쿼리만 교체. replace라 뒤로 가기 기록이 쌓이지 않는다.
 const changeSort = (by) => {
@@ -67,27 +96,29 @@ const goDetail = (city) => {
 
       <div class="sort-tabs">
         <button
+          v-for="tab in TABS"
+          :key="tab.key"
           class="sort-tab"
-          :class="sortBy === 'temp' ? 'sort-active' : ''"
-          @click="changeSort('temp')"
+          :class="sortBy === tab.key ? 'sort-active' : ''"
+          @click="changeSort(tab.key)"
         >
-          기온 높은 순
-        </button>
-        <button
-          class="sort-tab"
-          :class="sortBy === 'pm10' ? 'sort-active' : ''"
-          @click="changeSort('pm10')"
-        >
-          공기 좋은 순
+          {{ tab.label }}
         </button>
       </div>
 
       <ol class="rank-list">
         <li v-for="(city, index) in rankedList" :key="city.id" @click="goDetail(city)">
           <span class="rank-no">{{ index + 1 }}</span>
-          <span class="rank-name">{{ city.name }}</span>
+          <span class="rank-name">{{ city.name }}<em>{{ city.area }}</em></span>
 
-          <span v-if="sortBy === 'temp'" class="rank-value">
+          <span v-if="sortBy === 'running'" class="rank-value">
+            <span class="run-sub num">{{ tempText(city.temp) }}</span>
+            <span class="run-score num" :style="{ color: colorOf(scoreOf(city).score) }">
+              {{ scoreOf(city).score }}
+            </span>
+            <span class="run-grade">{{ scoreOf(city).grade.label }}</span>
+          </span>
+          <span v-else-if="sortBy === 'temp'" class="rank-value">
             {{ tempText(city.temp) }}
             <TempBadge :temp="city.temp" />
           </span>
@@ -99,7 +130,7 @@ const goDetail = (city) => {
       </ol>
 
       <template #footer>
-        행을 클릭하면 해당 도시의 상세 관측 정보로 이동합니다. (현재 정렬: {{ sortBy }})
+        행을 클릭하면 해당 지역의 상세 관측 정보로 이동합니다.
       </template>
     </BaseDashboardCard>
   </div>
@@ -113,12 +144,12 @@ const goDetail = (city) => {
 }
 
 .sort-tab {
-  padding: 5px 14px;
+  padding: 6px 15px;
   background-color: var(--surface-2);
   border: 1px solid var(--line-soft);
   border-radius: 999px;
   color: var(--text-dim);
-  font-size: 12.5px;
+  font-size: 13.5px;
   cursor: pointer;
 }
 
@@ -158,15 +189,24 @@ const goDetail = (city) => {
 
 .rank-no {
   flex-shrink: 0;
-  width: 22px;
+  width: 24px;
   color: var(--text-faint);
-  font-size: 12px;
+  font-size: 13px;
   font-variant-numeric: tabular-nums;
 }
 
 .rank-name {
   flex-grow: 1;
+  font-size: 15px;
   font-weight: 600;
+}
+
+.rank-name em {
+  margin-left: 6px;
+  color: var(--text-faint);
+  font-size: 11.5px;
+  font-style: normal;
+  font-weight: 400;
 }
 
 .rank-value {
@@ -174,7 +214,25 @@ const goDetail = (city) => {
   align-items: center;
   gap: 8px;
   color: var(--text-dim);
-  font-size: 13px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
+}
+
+.run-sub {
+  color: var(--text-faint);
+  font-size: 12.5px;
+}
+
+.run-score {
+  min-width: 30px;
+  font-size: 19px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.run-grade {
+  min-width: 30px;
+  color: var(--text-faint);
+  font-size: 11.5px;
 }
 </style>

@@ -77,7 +77,7 @@ const scoreColor = computed(() => {
     var(--surface);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), var(--edge);
 }
 
 .body {
@@ -101,26 +101,26 @@ const scoreColor = computed(() => {
 }
 
 .name {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
 }
 
 .region {
   margin-left: 6px;
   color: var(--text-faint);
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 400;
 }
 
 .temp {
-  font-size: 46px;
+  font-size: 52px;
   font-weight: 800;
   line-height: 1.05;
 }
 
 .status {
   color: var(--text-dim);
-  font-size: 12.5px;
+  font-size: 13.5px;
 }
 
 .score-box {
@@ -129,21 +129,21 @@ const scoreColor = computed(() => {
 }
 
 .score {
-  font-size: 40px;
+  font-size: 44px;
   font-weight: 800;
   line-height: 1;
 }
 
 .score-label {
   color: var(--text-faint);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .link {
   display: inline-block;
   margin-top: 4px;
   color: var(--accent);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   text-decoration: none;
 }
@@ -157,6 +157,6 @@ const scoreColor = computed(() => {
   padding-top: 12px;
   border-top: 1px solid var(--line-soft);
   color: var(--text-dim);
-  font-size: 12.5px;
+  font-size: 13.5px;
 }
 </style>
