@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
 import { useWeatherScene } from '../../composables/useWeatherScene'
-import RunnerPack from './RunnerPack.vue'
 
 /* 화면 뒤에 깔리는 배경. 지금 시각·날씨·계절에 따라 장면이 바뀐다.
    3D 라이브러리 없이 SVG 도형과 CSS 애니메이션만 쓴다.
@@ -126,8 +125,6 @@ const skyStyle = computed(() => ({
 
     <!-- 콘텐츠 쪽 가독성을 위해 위로 갈수록 배경을 덮는다 -->
     <div class="veil" />
-
-    <RunnerPack />
 
     <!-- 비와 눈 -->
     <div v-if="scene.condition.value === 'rain' || scene.condition.value === 'storm'" class="rain">

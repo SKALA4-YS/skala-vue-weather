@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import UnitToggler from './components/exercise/UnitToggler.vue'
 import ThemeToggler from './components/exercise/ThemeToggler.vue'
 import WeatherScene from './components/exercise/WeatherScene.vue'
+import CharacterRun from './components/exercise/CharacterRun.vue'
 import ShoeMark from './components/exercise/ShoeMark.vue'
 
 // 4일차: 화면 전환 상태가 없다. 지금 어떤 화면인지는 URL이 들고 있다.
@@ -19,6 +20,9 @@ const navItems = [
 <template>
   <!-- 지금 날씨·시각·계절에 맞춘 배경. 화면 전체에 깔린다. -->
   <WeatherScene />
+
+  <!-- 캐릭터는 화면 맨 아래를 가로지른다. 배경 안에 두면 카드에 가려 보이지 않는다. -->
+  <CharacterRun />
 
   <div id="top" class="app">
     <header class="app-header">
