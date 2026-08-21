@@ -10,6 +10,7 @@ import WatcherMonitor from '../components/exercise/WatcherMonitor.vue'
 import StatusBar from '../components/exercise/StatusBar.vue'
 import RefreshBar from '../components/exercise/RefreshBar.vue'
 import HeroPanel from '../components/exercise/HeroPanel.vue'
+import RunningMap from '../components/exercise/RunningMap.vue'
 import { useWeatherStore } from '../stores/weatherStore'
 import { useConfigStore } from '../stores/configStore'
 import { useFavoriteStore } from '../stores/favoriteStore'
@@ -122,6 +123,18 @@ const heroCity = computed(() => {
   return [...weatherStore.cities].sort((a, b) => scoreOf(b) - scoreOf(a))[0]
 })
 
+// 지도 옆 순위. 점수가 높은 5곳만 보여 준다.
+const topCities = computed(() =>
+  [...weatherStore.cities].sort((a, b) => scoreOf(b) - scoreOf(a)).slice(0, 5),
+)
+
+const colorOf = (score) => {
+  if (score >= 70) return 'var(--accent)'
+  if (score >= 55) return 'var(--cyan)'
+  if (score >= 40) return 'var(--warn)'
+  return 'var(--danger)'
+}
+
 const heroLabel = computed(() => {
   if (selectedCityInfo.value !== null) return '선택한 지역'
   return scoreOf(heroCity.value) >= 55 ? '지금 가장 뛰기 좋은 곳' : '그나마 나은 곳'
@@ -191,6 +204,11 @@ const handleSelectCard = (city) => {
   selectedCityInfo.value = city
 }
 
+// 지도 핀을 눌러도 카드를 누른 것과 같게 동작한다
+const handleSelectFromMap = (city) => {
+  selectedCityInfo.value = city
+}
+
 // 4일차 요구사항: alert 대신 Programmatic Navigation
 const handleClickDetail = (city) => {
   router.push({ name: 'weather-detail', params: { cityId: city.id } })
@@ -247,6 +265,48 @@ const handleHotUpdate = (newHot) => {
         </div>
       </aside>
     </div>
+
+    <section class="surface map-section">
+      <div class="map-head">
+        <div>
+          <p class="section-label">전국 러닝 지도</p>
+          <p class="map-desc">핀을 누르면 그 지역 요약이 위로 올라옵니다.</p>
+        </div>
+        <span class="map-count num">{{ weatherStore.cities.length }}개 지역</span>
+      </div>
+
+      <!-- 한국은 세로로 긴 지형이라 지도를 좁게 두고 옆에 순위를 붙였다 -->
+      <div class="map-grid">
+        <RunningMap
+          :cities="weatherStore.cities"
+          :selected-id="selectedCityInfo === null ? '' : selectedCityInfo.id"
+          @select-city="handleSelectFromMap"
+        />
+
+        <div class="top-list">
+          <p class="top-label">지금 뛰기 좋은 곳</p>
+
+          <button
+            v-for="(city, rank) in topCities"
+            :key="city.id"
+            class="top-item"
+            :class="selectedCityInfo !== null && selectedCityInfo.id === city.id ? 'is-on' : ''"
+            @click="handleSelectFromMap(city)"
+          >
+            <span class="top-rank num">{{ rank + 1 }}</span>
+            <span class="top-name">
+              {{ city.name }}
+              <em>{{ city.status }}</em>
+            </span>
+            <span class="top-score num" :style="{ color: colorOf(scoreOf(city)) }">
+              {{ scoreOf(city) }}
+            </span>
+          </button>
+
+          <RouterLink to="/ranking" class="top-more">전체 순위 보기</RouterLink>
+        </div>
+      </div>
+    </section>
 
     <section class="surface search-box">
       <SearchBar :query="searchQuery" @update-query="handleQueryUpdate" />
@@ -366,6 +426,122 @@ const handleHotUpdate = (newHot) => {
   margin-top: 8px !important;
   color: var(--danger);
   font-size: 11px;
+}
+.map-section {
+  padding: 18px;
+}
+
+.map-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.map-head p {
+  margin: 0;
+}
+
+.map-desc {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.map-count {
+  color: var(--text-faint);
+  font-size: 11.5px;
+}
+
+.map-grid {
+  display: grid;
+  grid-template-columns: 1fr 236px;
+  gap: 14px;
+}
+
+.top-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.top-label {
+  margin: 0 0 2px;
+  color: var(--text-faint);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.top-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  background-color: var(--surface-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+}
+
+.top-item:hover {
+  border-color: var(--accent);
+}
+
+.top-item.is-on {
+  border-color: var(--accent);
+  background-color: var(--accent-soft);
+}
+
+.top-rank {
+  width: 14px;
+  color: var(--text-faint);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.top-name {
+  flex-grow: 1;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.top-name em {
+  margin-left: 4px;
+  color: var(--text-faint);
+  font-size: 10.5px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.top-score {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.top-more {
+  margin-top: auto;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--text-dim);
+  font-size: 12px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.top-more:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .map-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .search-box {
