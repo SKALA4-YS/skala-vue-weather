@@ -224,7 +224,7 @@ const handleHotUpdate = (newHot) => {
       <div class="map-col">
         <div class="map-head">
           <p class="section-label">RUN MAP · 전국 러닝 지도</p>
-          <span class="map-count num">{{ weatherStore.cities.length }}개 지역</span>
+          <RefreshBar />
         </div>
 
         <KoreaMap :cities="weatherStore.cities" :selected-id="selectedCityInfo === null ? '' : selectedCityInfo.id" @select-city="handleSelectFromMap" />
@@ -273,10 +273,6 @@ const handleHotUpdate = (newHot) => {
               {{ weatherStore.locationError }}
             </p>
           </template>
-        </div>
-
-        <div class="surface">
-          <RefreshBar />
         </div>
       </div>
     </section>
@@ -340,6 +336,11 @@ const handleHotUpdate = (newHot) => {
   align-items: start;
 }
 
+/* 지도는 자기 높이만 차지하게 둔다. 오른쪽 칸에 맞춰 늘리면 아래가 빈다 */
+.map-col {
+  align-self: start;
+}
+
 .map-col {
   display: flex;
   flex-direction: column;
@@ -352,9 +353,10 @@ const handleHotUpdate = (newHot) => {
 
 .map-head {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 10px;
+  margin-bottom: 4px;
 }
 
 .map-head .section-label {
