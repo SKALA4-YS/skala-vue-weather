@@ -210,13 +210,25 @@ export const troubles = [
   {
     id: 'tb-11',
     day: 7,
-    title: '지도 마커에 스타일이 적용되지 않음',
-    tag: '스타일',
-    symptom: 'divIcon으로 만든 핀에 <style scoped>의 규칙이 전혀 먹지 않았다.',
+    title: '타일 지도에 주변국까지 나와 산만함',
+    tag: 'UI',
+    symptom:
+      'Leaflet + OpenStreetMap 타일로 만든 지도에 중국과 일본이 크게 잡혀 남한이 작게 보였다.',
     cause:
-      'Leaflet은 마커를 컴포넌트 템플릿이 아니라 자바스크립트로 직접 DOM에 넣는다. Vue가 붙이는 data-v 속성이 없어서 scoped 셀렉터와 맞지 않는다.',
-    fix: '마커 스타일만 scoped가 아닌 전역 <style> 블록으로 분리하고, 클래스 이름에 run- 접두사를 붙여 다른 스타일과 충돌하지 않게 했다.',
-    file: 'components/exercise/RunningMap.vue',
+      '남한은 세로로 긴 지형이라 가로가 넓은 컨테이너에 fitBounds를 하면 세로에 맞춰지고 좌우로 주변국이 채워진다. 마운트 직후에는 Leaflet이 컨테이너 크기를 0으로 알고 있어 축소가 더 심해졌다.',
+    fix: '타일 지도를 걷어내고 통계청 시도 경계 GeoJSON을 SVG path로 변환해 남한만 직접 그렸다. 배경이 없으니 지도 전체를 지역 데이터에만 쓸 수 있고, 번들에서 Leaflet 의존성도 사라졌다.',
+    file: 'components/exercise/KoreaMap.vue',
+  },
+  {
+    id: 'tb-13',
+    day: 7,
+    title: '지도 좌우에 빈 공간이 크게 남음',
+    tag: 'UI',
+    symptom: 'SVG로 바꾼 뒤에도 지도 양옆이 비어 실제 지형이 작게 보였다.',
+    cause:
+      '원본 데이터에 울릉도·독도(경도 130.9)가 들어 있어 투영 범위가 동쪽으로 크게 늘어났다. 본토는 경도 126~129.7 사이에 모여 있는데 화면은 125.9~130.9를 기준으로 잡혀 있었다.',
+    fix: '경도 130도 밖에 있는 섬은 경계에서 제외하고 투영 범위를 본토와 제주에 맞춰 다시 계산했다. viewBox 높이도 실제 종횡비에서 자동으로 구하도록 바꿨다.',
+    file: 'data/koreaMap.js',
   },
   {
     id: 'tb-12',
