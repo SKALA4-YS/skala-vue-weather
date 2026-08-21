@@ -132,19 +132,9 @@ const viewBox = computed(() => `-30 -150 ${MAP_W + 60} ${MAP_H * TILT + 190}`)
 
 <style scoped>
 .map-wrap {
-  --map-top: #ffffff;
-  --map-bottom: #c8dcf3;
-  --map-side: #93b4d8;
-
   display: flex;
   flex-direction: column;
   height: 100%;
-}
-
-:global(html.dark) .map-wrap {
-  --map-top: #202a36;
-  --map-bottom: #161d27;
-  --map-side: #0d131a;
 }
 
 .map {
@@ -156,13 +146,9 @@ const viewBox = computed(() => `-30 -150 ${MAP_W + 60} ${MAP_H * TILT + 190}`)
 
 .land-face path {
   fill: url(#landFace);
-  stroke: #8fb2d6;
+  stroke: var(--map-line);
   stroke-width: 1.3;
   stroke-linejoin: round;
-}
-
-:global(html.dark) .land-face path {
-  stroke: #33415a;
 }
 
 .land-side path {
@@ -177,11 +163,7 @@ const viewBox = computed(() => `-30 -150 ${MAP_W + 60} ${MAP_H * TILT + 190}`)
 }
 
 .pin-shadow {
-  fill: rgba(20, 45, 80, 0.22);
-}
-
-:global(html.dark) .pin-shadow {
-  fill: rgba(0, 0, 0, 0.45);
+  fill: var(--map-shadow);
 }
 
 .pin-bar-side {
@@ -193,12 +175,8 @@ const viewBox = computed(() => `-30 -150 ${MAP_W + 60} ${MAP_H * TILT + 190}`)
 }
 
 .cap-box {
-  stroke: #fff;
+  stroke: var(--surface);
   stroke-width: 2;
-}
-
-:global(html.dark) .cap-box {
-  stroke: #0d131a;
 }
 
 .cap-score {

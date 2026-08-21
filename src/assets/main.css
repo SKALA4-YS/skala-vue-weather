@@ -23,6 +23,13 @@
   --warn: #f08c00;
   --danger: #e5484d;
 
+  /* 지도 면·옆면 색. 컴포넌트 안에서 정의하면 테마 전환이 확실하지 않아 여기 둔다 */
+  --map-top: #ffffff;
+  --map-bottom: #c8dcf3;
+  --map-side: #93b4d8;
+  --map-line: #8fb2d6;
+  --map-shadow: rgba(20, 45, 80, 0.22);
+
   --radius: 16px;
   --radius-sm: 12px;
 
@@ -54,6 +61,12 @@ html.dark {
   --cyan: #35d6ee;
   --warn: #ffb020;
   --danger: #ff5470;
+
+  --map-top: #2c3a4d;
+  --map-bottom: #1a2431;
+  --map-side: #0e151f;
+  --map-line: #44586f;
+  --map-shadow: rgba(0, 0, 0, 0.5);
 
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 16px rgba(0, 0, 0, 0.35);
   --shadow-lift: 0 2px 6px rgba(0, 0, 0, 0.45), 0 14px 30px rgba(0, 0, 0, 0.45);

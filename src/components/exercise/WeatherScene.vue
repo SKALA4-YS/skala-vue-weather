@@ -194,7 +194,7 @@ const skyStyle = computed(() => ({
 }
 
 :global(html.dark) .scene {
-  opacity: 0.55;
+  opacity: 0.72;
 }
 
 .layer {
@@ -212,6 +212,16 @@ const skyStyle = computed(() => ({
     color-mix(in srgb, var(--bg) 88%, transparent) 40%,
     color-mix(in srgb, var(--bg) 70%, transparent) 72%,
     color-mix(in srgb, var(--bg) 86%, transparent) 100%
+  );
+}
+
+:global(html.dark) .veil {
+  background: linear-gradient(
+    180deg,
+    var(--bg) 0%,
+    color-mix(in srgb, var(--bg) 80%, transparent) 42%,
+    color-mix(in srgb, var(--bg) 48%, transparent) 74%,
+    color-mix(in srgb, var(--bg) 66%, transparent) 100%
   );
 }
 
@@ -277,7 +287,7 @@ const skyStyle = computed(() => ({
 }
 
 :global(html.dark) .city rect {
-  fill: #070b12;
+  fill: #131c29;
 }
 
 .window {
@@ -287,6 +297,15 @@ const skyStyle = computed(() => ({
 .window.is-lit {
   fill: #ffd98a;
   opacity: 0.9;
+}
+
+:global(html.dark) .window {
+  fill: #26364c;
+}
+
+:global(html.dark) .window.is-lit {
+  fill: #ffd98a;
+  opacity: 1;
 }
 
 .trunk {
@@ -324,7 +343,7 @@ const skyStyle = computed(() => ({
 }
 
 :global(html.dark) .runner > * {
-  fill: #f0f6ff;
+  fill: #cfdcec;
 }
 
 .torso {
