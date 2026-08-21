@@ -86,7 +86,9 @@ export const practiceDays = [
       'Element Plus 적용 (el-switch · el-progress · ElMessage · ElMessageBox)',
       '러닝 지수 컨셉: 100점에서 항목별 감점, 감점 내역을 화면에 노출',
       '전국 30개 지역으로 확대하고 목록은 Open-Meteo 배치 조회로 전환',
-      '라이트(기본)/다크 테마, Geolocation, 5일 예보, 러닝 지도 추가',
+      '라이트(기본)/다크 테마, Geolocation, 5일 예보 추가',
+      '남한 시도 경계를 SVG로 내장하고 점수만큼 솟는 기둥으로 러닝 지도 구성',
+      '시각·날씨·계절에 따라 바뀌는 배경 씬과 달리는 러너 애니메이션',
     ],
     route: '/',
   },
@@ -240,6 +242,29 @@ export const troubles = [
       '스토어에 action을 추가하는 편집이 실제로는 적용되지 않은 채 main.js에서 먼저 호출했다. getters 블록만 수정되고 actions 블록이 그대로였다.',
     fix: 'actions에 applyTheme / toggleTheme을 추가했다. 저장 후에는 파일을 다시 열어 반영 여부를 확인하는 절차를 넣었다.',
     file: 'stores/configStore.js',
+  },
+
+  {
+    id: 'tb-14',
+    day: 7,
+    title: '비 파티클이 화면에 나타나지 않음',
+    tag: '스타일',
+    symptom: '서울이 비인데도 배경에 빗줄기가 보이지 않았다.',
+    cause:
+      '배경 씬은 콘텐츠 가독성을 위해 맨 위에 반투명 덮개(veil)를 한 장 깔아 두는데, 비를 그 덮개보다 먼저 그리고 있었다. 요소가 없는 게 아니라 덮여 있었다.',
+    fix: '빗줄기와 눈, 러너를 덮개 뒤(DOM상 나중)로 옮겼다. 대신 덮개를 거치지 않으니 그만큼 진해져서 opacity로 다시 낮췄다.',
+    file: 'components/exercise/WeatherScene.vue',
+  },
+  {
+    id: 'tb-15',
+    day: 7,
+    title: '러너 실루엣이 세로로 길게 늘어남',
+    tag: '스타일',
+    symptom: '배경에 넣은 달리는 사람이 비정상적으로 홀쭉하게 그려졌다.',
+    cause:
+      '배경 실루엣 레이어는 화면 폭에 맞춰 늘리려고 preserveAspectRatio="none"으로 두었다. 같은 레이어에 사람을 넣으니 사람까지 함께 늘어났다.',
+    fix: '언덕·도시처럼 늘어나도 되는 것과 비율을 지켜야 하는 것을 분리했다. 러너는 별도 SVG로 빼서 고정 크기로 두고, 위치만 CSS 애니메이션으로 옮긴다.',
+    file: 'components/exercise/WeatherScene.vue',
   },
 ]
 

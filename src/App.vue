@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import UnitToggler from './components/exercise/UnitToggler.vue'
 import ThemeToggler from './components/exercise/ThemeToggler.vue'
+import WeatherScene from './components/exercise/WeatherScene.vue'
 
 // 4일차: 화면 전환 상태가 없다. 지금 어떤 화면인지는 URL이 들고 있다.
 // 5일차: 두 토글러는 props도 이벤트도 없이 스토어에서 값을 꺼내 쓴다.
@@ -16,6 +17,9 @@ const navItems = [
 </script>
 
 <template>
+  <!-- 지금 날씨·시각·계절에 맞춘 배경. 화면 전체에 깔린다. -->
+  <WeatherScene />
+
   <div class="app">
     <header class="app-header">
       <RouterLink to="/" class="brand">
@@ -56,6 +60,8 @@ const navItems = [
 
 <style scoped>
 .app {
+  position: relative;
+  z-index: 1;
   max-width: 1000px;
   margin: 0 auto;
   padding: 24px 20px 48px;

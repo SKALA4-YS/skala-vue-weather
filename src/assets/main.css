@@ -105,7 +105,7 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background: var(--bg-grad) fixed;
+  background-color: var(--bg);
   color: var(--text);
   font-family:
     'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
