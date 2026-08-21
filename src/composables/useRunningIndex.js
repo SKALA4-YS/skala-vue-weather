@@ -10,19 +10,23 @@
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
 
 // 기온: 10~18도를 기준 구간으로 두고 양쪽으로 멀어질수록 깎는다.
+// 더울수록 기울기를 키운다. 추위는 옷으로 어느 정도 버티지만 폭염은 그렇지 않다.
 const scoreTemp = (temp) => {
   if (temp >= 10 && temp <= 18) return 0
-  if (temp > 18 && temp <= 23) return -(temp - 18) * 1.5
-  if (temp > 23 && temp <= 28) return -7.5 - (temp - 23) * 3
-  if (temp > 28) return -22.5 - (temp - 28) * 4
+  if (temp > 18 && temp <= 24) return -(temp - 18) * 1
+  if (temp > 24 && temp <= 28) return -6 - (temp - 24) * 3.5
+  if (temp > 28 && temp <= 32) return -20 - (temp - 28) * 5
+  if (temp > 32) return -40 - (temp - 32) * 8 // 폭염주의보 기준을 넘으면 급격히 깎는다
   if (temp >= 5) return -(10 - temp) * 1.5
-  return -7.5 - (5 - temp) * 2
+  if (temp >= 0) return -7.5 - (5 - temp) * 2.5
+  return -20 - (0 - temp) * 3
 }
 
 // 습도: 땀이 증발하지 못하면 체온이 안 떨어진다. 낮아도 호흡기가 마른다.
+// 한국 여름은 80%를 넘는 날이 흔해서 기준 구간을 넓게 잡고 기울기도 낮췄다.
 const scoreHumidity = (humidity) => {
-  if (humidity >= 40 && humidity <= 60) return 0
-  if (humidity > 60) return -(humidity - 60) * 0.5
+  if (humidity >= 40 && humidity <= 65) return 0
+  if (humidity > 65) return -(humidity - 65) * 0.35
   return -(40 - humidity) * 0.3
 }
 
@@ -41,10 +45,12 @@ const scoreWind = (wind) => {
   return -6 - (wind - 7) * 3
 }
 
+// 강수확률: 비는 불편하지만 폭염처럼 위험하지는 않다.
+// 예전 배점에서는 비 오는 날이 폭염보다 낮게 나와서 기울기를 낮췄다.
 const scoreRain = (rainProb) => {
-  if (rainProb <= 20) return 0
-  if (rainProb <= 50) return -(rainProb - 20) * 0.3
-  return -9 - (rainProb - 50) * 0.6
+  if (rainProb <= 30) return 0
+  if (rainProb <= 60) return -(rainProb - 30) * 0.25
+  return -7.5 - (rainProb - 60) * 0.6
 }
 
 // 자외선은 Open-Meteo에서 받아온 값이 있을 때만 반영한다.
