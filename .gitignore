@@ -10,3 +10,9 @@ dist
 
 # 교재 PDF (저작물, 대용량)
 *.pdf
+
+# 에디터·로컬 도구 설정
+.vscode/
+.idea/
+.claude/
+*.swp
