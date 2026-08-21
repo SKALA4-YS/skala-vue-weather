@@ -8,7 +8,7 @@
 
 const slowOnes = [
   { key: 'chiikawa', src: '/characters/chiikawa.png', alt: '', bottom: 4, delay: 0 },
-  { key: 'hachiware', src: '/characters/hachiware.png', alt: '', bottom: 0, delay: -1.8 },
+  { key: 'hachiware', src: '/characters/hachiware.png', alt: '', bottom: 0, delay: -1.4 },
 ]
 </script>
 
@@ -54,9 +54,9 @@ const slowOnes = [
   filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
 }
 
-/* 둘은 나란히 천천히 */
+/* 둘은 나란히. 46초는 너무 느긋해서 1.3배 빠른 35초로 잡았다 */
 .slow {
-  animation: stroll 46s linear infinite;
+  animation: stroll 35s linear infinite;
 }
 
 @keyframes stroll {
@@ -68,17 +68,20 @@ const slowOnes = [
   }
 }
 
-/* 셋째는 46초 주기 중 20% 구간(약 9초)에만 달린다. 느린 둘보다 다섯 배 빠르다. */
+/* 셋째는 앞의 둘과 주기를 묶지 않는다.
+   같이 묶으면 둘이 다 지나갈 때까지 기다렸다가 한 번만 나온다.
+   13초 주기로 7초쯤 달리고 잠깐 쉬므로 자주 지나간다.
+   속도는 여전히 느린 둘의 다섯 배다. (124% / 7.3s 대 120% / 35s) */
 .dash {
   bottom: 8px;
-  animation: dash 46s linear infinite;
+  animation: dash 13s linear infinite;
 }
 
 @keyframes dash {
   0% {
     left: -14%;
   }
-  20% {
+  56% {
     left: 110%;
   }
   100% {
@@ -97,15 +100,15 @@ const slowOnes = [
     linear-gradient(90deg, transparent, rgba(110, 150, 195, 0.6)) center/100% 2px no-repeat,
     linear-gradient(90deg, transparent, rgba(110, 150, 195, 0.45)) center 6px/74% 2px no-repeat,
     linear-gradient(90deg, transparent, rgba(110, 150, 195, 0.45)) center -6px/62% 2px no-repeat;
-  animation: whoosh 46s linear infinite;
+  animation: whoosh 13s linear infinite;
 }
 
 @keyframes whoosh {
   0%,
-  20% {
+  56% {
     opacity: 1;
   }
-  20.1%,
+  56.1%,
   100% {
     opacity: 0;
   }
