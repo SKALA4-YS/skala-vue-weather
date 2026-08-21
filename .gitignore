@@ -1,0 +1,12 @@
+node_modules
+dist
+.DS_Store
+*.local
+.vite
+
+# 로컬 환경변수 (API Key)
+.env
+.env.local
+
+# 교재 PDF (저작물, 대용량)
+*.pdf
