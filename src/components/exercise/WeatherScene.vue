@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useWeatherScene } from '../../composables/useWeatherScene'
+import RunnerPack from './RunnerPack.vue'
 
 /* 화면 뒤에 깔리는 배경. 지금 시각·날씨·계절에 따라 장면이 바뀐다.
    3D 라이브러리 없이 SVG 도형과 CSS 애니메이션만 쓴다.
@@ -126,20 +127,7 @@ const skyStyle = computed(() => ({
     <!-- 콘텐츠 쪽 가독성을 위해 위로 갈수록 배경을 덮는다 -->
     <div class="veil" />
 
-    <!-- 달리는 사람. 팔다리를 번갈아 돌려 달리는 동작을 만든다.
-         위 레이어는 preserveAspectRatio="none"이라 세로로 늘어나므로 러너는 따로 뺐다. -->
-    <div class="runner-track">
-      <svg class="runner-svg" viewBox="-14 -26 28 30">
-        <g class="runner">
-          <rect class="limb leg leg-back" x="-1.5" y="-2" width="3" height="10" rx="1.5" />
-          <rect class="limb arm arm-back" x="-1.2" y="-14" width="2.4" height="8" rx="1.2" />
-          <rect class="torso" x="-2.6" y="-16" width="5.2" height="10" rx="2.6" />
-          <circle class="head" cx="0.4" cy="-19" r="3" />
-          <rect class="limb leg leg-front" x="-1.5" y="-2" width="3" height="10" rx="1.5" />
-          <rect class="limb arm arm-front" x="-1.2" y="-14" width="2.4" height="8" rx="1.2" />
-        </g>
-      </svg>
-    </div>
+    <RunnerPack />
 
     <!-- 비와 눈 -->
     <div v-if="scene.condition.value === 'rain' || scene.condition.value === 'storm'" class="rain">
@@ -189,18 +177,20 @@ const skyStyle = computed(() => ({
 }
 
 /* 장면이 화면을 다 채우면 콘텐츠와 싸운다. 아래쪽만 쓰고 전체를 옅게 깐다. */
-.scene {
+.sky {
   opacity: 0.5;
-}
-
-:global(html.dark) .scene {
-  opacity: 0.72;
 }
 
 .layer {
   top: auto;
   bottom: 0;
   height: 38vh;
+  opacity: 0.5;
+}
+
+:global(html.dark) .sky,
+:global(html.dark) .layer {
+  opacity: 0.72;
 }
 
 .veil {
@@ -317,117 +307,12 @@ const skyStyle = computed(() => ({
 }
 
 /* 러너는 지면 높이에 맞춰 두고 좌우로 천천히 지나가게 한다 */
-.runner-track {
-  position: absolute;
-  opacity: 0.85;
-  left: 0;
-  bottom: 5vh;
-  width: 100%;
-  height: 120px;
-}
 
-.runner-svg {
-  position: absolute;
-  bottom: 0;
-  width: 104px;
-  height: 116px;
-  animation: cross 24s linear infinite;
-}
-
-.runner > * {
-  fill: #0f1826;
-}
-
-.runner {
-  transform: translateY(-2px);
-}
-
-:global(html.dark) .runner > * {
-  fill: #cfdcec;
-}
-
-.torso {
-  transform: rotate(9deg);
-}
-
-.limb {
-  transform-origin: 0 0;
-}
-
-.arm {
-  transform-origin: 0 -14px;
-}
-
-.limb.leg {
-  transform-origin: 0 -2px;
-}
-
-.arm-front {
-  animation: swingA 0.52s ease-in-out infinite alternate;
-}
-
-.arm-back {
-  animation: swingB 0.52s ease-in-out infinite alternate;
-}
-
-.leg-front {
-  animation: strideA 0.52s ease-in-out infinite alternate;
-}
-
-.leg-back {
-  animation: strideB 0.52s ease-in-out infinite alternate;
-}
-
-@keyframes cross {
-  from {
-    left: -10%;
-  }
-  to {
-    left: 106%;
-  }
-}
-
-@keyframes swingA {
-  from {
-    transform: rotate(46deg);
-  }
-  to {
-    transform: rotate(-40deg);
-  }
-}
-
-@keyframes swingB {
-  from {
-    transform: rotate(-40deg);
-  }
-  to {
-    transform: rotate(46deg);
-  }
-}
-
-@keyframes strideA {
-  from {
-    transform: rotate(30deg);
-  }
-  to {
-    transform: rotate(-26deg);
-  }
-}
-
-@keyframes strideB {
-  from {
-    transform: rotate(-26deg);
-  }
-  to {
-    transform: rotate(30deg);
-  }
-}
-
-.rain,
+:global(html.dark) .rain,
 .snow {
   position: absolute;
   inset: 0;
-  opacity: 0.75;
+  opacity: 0.4;
 }
 
 .rain span {
