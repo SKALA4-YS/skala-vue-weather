@@ -1,6 +1,14 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
+import { hasApiKey } from '../services/weatherApi'
+
+// Vite는 VITE_로 시작하는 환경 변수만 클라이언트 코드에 넣어 준다.
+// 빌드할 때 --mode로 고른 .env 파일의 값이 여기 들어온다.
+const buildMode = import.meta.env.VITE_APP_MODE ?? 'development'
+const buildLabel = import.meta.env.VITE_APP_LABEL ?? '개발 서버'
+
+console.log(`[build] mode=${buildMode} apiKey=${hasApiKey ? '있음' : '없음'}`)
 
 /* ════════════════════════════════════════════════
    [요구사항 5] WeatherAboutView.vue — '/about'
@@ -16,8 +24,7 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
       <template #title>서비스 소개</template>
 
       <p class="intro">
-        본 앱은 Vue 3 · Vue Router 4 · Pinia · Axios를 기반으로 제작된 실습용 기상 관측
-        대시보드입니다. 날씨 데이터는 OpenWeatherMap에서, 자외선·일출 정보는 Open-Meteo에서 받아옵니다.
+        본 앱은 Vue 3 · Vue Router 4 · Pinia · Axios를 기반으로 제작된 실습용 기상 관측 대시보드입니다. 날씨 데이터는 OpenWeatherMap에서, 자외선·일출 정보는 Open-Meteo에서 받아옵니다.
       </p>
 
       <ul class="feature-list">
@@ -32,9 +39,26 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
         <li>현재 날씨 · 대기오염 · 3시간 예보 등 복수 엔드포인트 병렬 호출</li>
       </ul>
 
-      <template #footer>
-        SKALA Vue 실습 · 4일차(Vue Router) · 5일차(Pinia) · 6일차(Axios)
-      </template>
+      <template #footer> SKALA Vue 실습 · 4일차(Vue Router) · 5일차(Pinia) · 6일차(Axios) </template>
+    </BaseDashboardCard>
+
+    <BaseDashboardCard>
+      <template #title>빌드 정보</template>
+
+      <dl class="build-info">
+        <div>
+          <dt>빌드 모드</dt>
+          <dd>
+            {{ buildMode }} <span class="label">{{ buildLabel }}</span>
+          </dd>
+        </div>
+        <div>
+          <dt>API Key</dt>
+          <dd>{{ hasApiKey ? '환경 변수로 주입됨' : '없음 (샘플 데이터)' }}</dd>
+        </div>
+      </dl>
+
+      <template #footer> 키는 .env 파일에만 두고 저장소에는 올리지 않습니다. 배포 시에는 호스팅 환경 변수로 넣습니다. </template>
     </BaseDashboardCard>
 
     <!-- 선언적 이동. 단순히 '누르면 저기로 간다'가 전부일 때는 RouterLink가 정답이다.
@@ -44,6 +68,40 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
 </template>
 
 <style scoped>
+.build-info {
+  margin: 0;
+}
+
+.build-info > div {
+  display: flex;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.build-info > div:last-child {
+  border-bottom: none;
+}
+
+.build-info dt {
+  width: 86px;
+  flex-shrink: 0;
+  color: var(--text-faint);
+  font-size: 12px;
+}
+
+.build-info dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.build-info .label {
+  margin-left: 5px;
+  color: var(--text-faint);
+  font-size: 12px;
+  font-weight: 400;
+}
+
 .intro {
   margin: 0 0 12px;
   color: var(--text-dim);

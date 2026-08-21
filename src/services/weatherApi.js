@@ -37,16 +37,13 @@ owm.interceptors.response.use(
 )
 
 // 현재 날씨
-const fetchCurrent = (lat, lon) =>
-  owm.get('/data/2.5/weather', { params: { lat, lon } }).then((res) => res.data)
+const fetchCurrent = (lat, lon) => owm.get('/data/2.5/weather', { params: { lat, lon } }).then((res) => res.data)
 
 // 5일 / 3시간 단위 예보
-const fetchForecast = (lat, lon) =>
-  owm.get('/data/2.5/forecast', { params: { lat, lon } }).then((res) => res.data)
+const fetchForecast = (lat, lon) => owm.get('/data/2.5/forecast', { params: { lat, lon } }).then((res) => res.data)
 
 // 대기오염 정보. 이 엔드포인트는 units/lang을 무시한다.
-const fetchAirPollution = (lat, lon) =>
-  owm.get('/data/2.5/air_pollution', { params: { lat, lon } }).then((res) => res.data)
+const fetchAirPollution = (lat, lon) => owm.get('/data/2.5/air_pollution', { params: { lat, lon } }).then((res) => res.data)
 
 const toObservedAt = (unixSeconds) => {
   const d = new Date(unixSeconds * 1000)
@@ -118,11 +115,7 @@ const toDailyItems = (forecast) => {
  * 셋 중 하나가 실패해도 나머지는 살리려고 allSettled를 쓴다.
  */
 export const fetchCityWeather = async (baseCity) => {
-  const [current, air, forecast] = await Promise.allSettled([
-    fetchCurrent(baseCity.lat, baseCity.lon),
-    fetchAirPollution(baseCity.lat, baseCity.lon),
-    fetchForecast(baseCity.lat, baseCity.lon),
-  ])
+  const [current, air, forecast] = await Promise.allSettled([fetchCurrent(baseCity.lat, baseCity.lon), fetchAirPollution(baseCity.lat, baseCity.lon), fetchForecast(baseCity.lat, baseCity.lon)])
 
   // 현재 날씨는 없으면 카드를 그릴 수 없으므로 여기서 실패로 본다
   if (current.status === 'rejected') {

@@ -9,7 +9,17 @@ import { fetchCityWeather, fetchWeatherByCoords, hasApiKey } from '../services/w
 //  - 도시 하나 상세: OpenWeatherMap (예보·대기오염까지 함께)
 // 30개를 도시마다 OpenWeatherMap으로 부르면 90회라 무료 한도(분당 60)를 넘긴다.
 export const useWeatherStore = defineStore('weather', () => {
-  const cities = ref(cityList.map((city) => ({ ...city, temp: 0, humidity: 0, pm10: 0, wind: 0, rainProb: 0, status: '불러오는 중' })))
+  const cities = ref(
+    cityList.map((city) => ({
+      ...city,
+      temp: 0,
+      humidity: 0,
+      pm10: 0,
+      wind: 0,
+      rainProb: 0,
+      status: '불러오는 중',
+    })),
+  )
   const forecasts = ref({}) // cityId -> 3시간 예보
   const dailies = ref({}) // cityId -> 일별 예보
   const detailLoaded = ref({}) // cityId -> OpenWeatherMap 상세를 받아 왔는지
@@ -123,10 +133,7 @@ export const useWeatherStore = defineStore('weather', () => {
       },
       (error) => {
         // 권한을 거부해도 앱은 그대로 동작해야 하므로 안내만 남긴다
-        locationError.value =
-          error.code === error.PERMISSION_DENIED
-            ? '위치 권한이 거부되었습니다. 브라우저 설정에서 허용해 주세요.'
-            : '현재 위치를 가져오지 못했습니다.'
+        locationError.value = error.code === error.PERMISSION_DENIED ? '위치 권한이 거부되었습니다. 브라우저 설정에서 허용해 주세요.' : '현재 위치를 가져오지 못했습니다.'
         locating.value = false
       },
       { timeout: 10000, maximumAge: 300000 },

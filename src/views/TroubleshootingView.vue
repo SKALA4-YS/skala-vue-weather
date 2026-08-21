@@ -11,8 +11,7 @@ const filtered = computed(() => {
   return troubles.filter((item) => item.tag === selectedTag.value)
 })
 
-const countOf = (tag) =>
-  tag === '전체' ? troubles.length : troubles.filter((item) => item.tag === tag).length
+const countOf = (tag) => (tag === '전체' ? troubles.length : troubles.filter((item) => item.tag === tag).length)
 </script>
 
 <template>
@@ -20,19 +19,10 @@ const countOf = (tag) =>
     <section class="surface intro">
       <p class="section-label">트러블슈팅</p>
       <h2 class="title">막혔던 {{ troubles.length }}가지</h2>
-      <p class="desc">
-        해결한 방법만 적지 않고 왜 그런 일이 생겼는지를 함께 남겼습니다.
-        같은 실수를 다시 하지 않으려고 만든 기록입니다.
-      </p>
+      <p class="desc">해결한 방법만 적지 않고 왜 그런 일이 생겼는지를 함께 남겼습니다. 같은 실수를 다시 하지 않으려고 만든 기록입니다.</p>
 
       <div class="tags">
-        <button
-          v-for="tag in troubleTags"
-          :key="tag"
-          class="tag"
-          :class="selectedTag === tag ? 'is-on' : ''"
-          @click="selectedTag = tag"
-        >
+        <button v-for="tag in troubleTags" :key="tag" class="tag" :class="selectedTag === tag ? 'is-on' : ''" @click="selectedTag = tag">
           {{ tag }}
           <span class="tag-count">{{ countOf(tag) }}</span>
         </button>

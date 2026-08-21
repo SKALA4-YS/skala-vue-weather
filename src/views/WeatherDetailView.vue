@@ -99,14 +99,10 @@ watch(
   카드와 똑같은 변환식을 여기에 또 쓰지 않고 composable 하나로 공유한다.
   교재가 (참고)로 적어 둔 "유사한 코드가 중복됨" 지점이 바로 여기다.
 */
-const { displayTempText } = useDisplayTemp(() =>
-  cityInfo.value === null ? 0 : cityInfo.value.temp,
-)
+const { displayTempText } = useDisplayTemp(() => (cityInfo.value === null ? 0 : cityInfo.value.temp))
 
 // 체감 온도도 같은 방식으로 단위를 맞춘다 (API에서 받은 값이라 없을 수도 있다)
-const { displayTempText: feelsLikeText } = useDisplayTemp(() =>
-  cityInfo.value === null || cityInfo.value.feelsLike === undefined ? 0 : cityInfo.value.feelsLike,
-)
+const { displayTempText: feelsLikeText } = useDisplayTemp(() => (cityInfo.value === null || cityInfo.value.feelsLike === undefined ? 0 : cityInfo.value.feelsLike))
 
 // [5일차 요구사항 4] 상세 화면에서도 같은 즐겨찾기 스토어를 쓴다.
 // 목록에서 별을 눌렀다가 상세로 들어와도 상태가 그대로 이어진다.
@@ -154,11 +150,7 @@ const goBack = () => {
         <template #title>상세 관측 정보</template>
 
         <!-- [요구사항 4] 목록에서 누른 즐겨찾기가 여기에도 그대로 반영된다. -->
-        <button
-          class="fav-line"
-          :class="favoriteStore.isFavorite(cityInfo.id) ? 'fav-on' : ''"
-          @click="handleToggleFavorite"
-        >
+        <button class="fav-line" :class="favoriteStore.isFavorite(cityInfo.id) ? 'fav-on' : ''" @click="handleToggleFavorite">
           {{ favoriteStore.isFavorite(cityInfo.id) ? '★ 즐겨찾기 해제' : '☆ 즐겨찾기 추가' }}
         </button>
 
@@ -175,13 +167,7 @@ const goBack = () => {
           <div class="observe-row">
             <dt>기상 현황</dt>
             <dd>
-              <img
-                v-if="cityInfo.icon"
-                :src="iconUrl(cityInfo.icon)"
-                :alt="cityInfo.status"
-                width="32"
-                height="32"
-              />
+              <img v-if="cityInfo.icon" :src="iconUrl(cityInfo.icon)" :alt="cityInfo.status" width="32" height="32" />
               {{ cityInfo.status }}
             </dd>
           </div>
@@ -214,9 +200,7 @@ const goBack = () => {
           </div>
         </dl>
 
-        <template #footer>
-          도시 코드 {{ cityInfo.id }} · 관측 시각 {{ cityInfo.observedAt }}
-        </template>
+        <template #footer> 도시 코드 {{ cityInfo.id }} · 관측 시각 {{ cityInfo.observedAt }} </template>
       </BaseDashboardCard>
 
       <BaseDashboardCard>
@@ -234,7 +218,9 @@ const goBack = () => {
           <div v-for="day in weatherStore.dailyOf(cityInfo.id)" :key="day.date" class="daily-item">
             <p class="daily-label">{{ day.label }}</p>
             <img :src="iconUrl(day.icon)" :alt="`${day.label} 날씨`" width="38" height="38" />
-            <p class="daily-temp num">{{ day.max }}° <span>{{ day.min }}°</span></p>
+            <p class="daily-temp num">
+              {{ day.max }}° <span>{{ day.min }}°</span>
+            </p>
             <p class="daily-pop num">{{ day.rainProb }}%</p>
           </div>
         </div>
@@ -268,22 +254,10 @@ const goBack = () => {
 
       <!-- 이전/다음 도시로 이동. 같은 컴포넌트를 재사용하는 이동이라 위쪽 watch가 필요했다. -->
       <nav class="sibling-nav">
-        <RouterLink
-          v-if="prevCity !== null"
-          class="sibling-link"
-          :to="{ name: 'weather-detail', params: { cityId: prevCity.id } }"
-        >
-          ← {{ prevCity.name }}
-        </RouterLink>
+        <RouterLink v-if="prevCity !== null" class="sibling-link" :to="{ name: 'weather-detail', params: { cityId: prevCity.id } }"> ← {{ prevCity.name }} </RouterLink>
         <span v-else class="sibling-blank"></span>
 
-        <RouterLink
-          v-if="nextCity !== null"
-          class="sibling-link"
-          :to="{ name: 'weather-detail', params: { cityId: nextCity.id } }"
-        >
-          {{ nextCity.name }} →
-        </RouterLink>
+        <RouterLink v-if="nextCity !== null" class="sibling-link" :to="{ name: 'weather-detail', params: { cityId: nextCity.id } }"> {{ nextCity.name }} → </RouterLink>
         <span v-else class="sibling-blank"></span>
       </nav>
 

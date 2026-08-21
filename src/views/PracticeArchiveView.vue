@@ -37,14 +37,7 @@ const currentPractice = computed(() => practiceMap[day.value] ?? null)
 <template>
   <div class="archive-view">
     <nav class="day-tabs">
-      <RouterLink
-        v-for="dayNo in [1, 2, 3]"
-        :key="dayNo"
-        class="day-tab"
-        :to="{ name: 'practice-archive', params: { day: dayNo } }"
-      >
-        {{ dayNo }}일차
-      </RouterLink>
+      <RouterLink v-for="dayNo in [1, 2, 3]" :key="dayNo" class="day-tab" :to="{ name: 'practice-archive', params: { day: dayNo } }"> {{ dayNo }}일차 </RouterLink>
     </nav>
 
     <template v-if="currentPractice !== null">
@@ -60,9 +53,7 @@ const currentPractice = computed(() => practiceMap[day.value] ?? null)
       </div>
     </template>
 
-    <p v-else class="archive-empty">
-      {{ day }}일차 과제는 아직 없습니다. 위에서 1~3일차 중 하나를 선택해 주세요.
-    </p>
+    <p v-else class="archive-empty">{{ day }}일차 과제는 아직 없습니다. 위에서 1~3일차 중 하나를 선택해 주세요.</p>
   </div>
 </template>
 

@@ -108,8 +108,7 @@ const summary = computed(() => {
   const hottest = [...list].sort((a, b) => b.temp - a.temp)[0]
 
   const symbol = configStore.unitSymbol
-  const avgTemp =
-    configStore.unit === 'fahrenheit' ? convertTemp(avgRaw, 'fahrenheit') : avgRaw.toFixed(1)
+  const avgTemp = configStore.unit === 'fahrenheit' ? convertTemp(avgRaw, 'fahrenheit') : avgRaw.toFixed(1)
   const hottestTemp = convertTemp(hottest.temp, configStore.unit)
 
   return `${list.length}곳 · 평균 ${avgTemp}${symbol} · 최고 ${hottest.name} ${hottestTemp}${symbol}`
@@ -124,9 +123,7 @@ const heroCity = computed(() => {
 })
 
 // 지도 옆 순위. 점수가 높은 5곳만 보여 준다.
-const topCities = computed(() =>
-  [...weatherStore.cities].sort((a, b) => scoreOf(b) - scoreOf(a)).slice(0, 5),
-)
+const topCities = computed(() => [...weatherStore.cities].sort((a, b) => scoreOf(b) - scoreOf(a)).slice(0, 5))
 
 const colorOf = (score) => {
   if (score >= 70) return 'var(--accent)'
@@ -136,10 +133,8 @@ const colorOf = (score) => {
 }
 
 const heroLabel = computed(() => {
-  if (selectedCityInfo.value !== null) return "SELECTED · 선택한 지역"
-  return scoreOf(heroCity.value) >= 55
-    ? "TODAY'S PICK · 지금 가장 뛰기 좋은 곳"
-    : "TODAY'S PICK · 그나마 나은 곳"
+  if (selectedCityInfo.value !== null) return 'SELECTED · 선택한 지역'
+  return scoreOf(heroCity.value) >= 55 ? "TODAY'S PICK · 지금 가장 뛰기 좋은 곳" : "TODAY'S PICK · 그나마 나은 곳"
 })
 
 /* ── watch / watchEffect (2일차 실습 유지) ────── */
@@ -180,10 +175,7 @@ watch([sortType, onlyHot], ([newSort, newHot], [oldSort, oldHot]) => {
 watch(
   () => filteredWeatherList.value.length,
   (newCount, oldCount) => {
-    const message =
-      newCount === 0
-        ? `[watch 결과 감시] 검색 결과 ${oldCount}건 → 0건`
-        : `[watch 결과 감시] 검색 결과 ${oldCount}건 → ${newCount}건`
+    const message = newCount === 0 ? `[watch 결과 감시] 검색 결과 ${oldCount}건 → 0건` : `[watch 결과 감시] 검색 결과 ${oldCount}건 → ${newCount}건`
 
     console.log(message)
     addLog(message)
@@ -235,11 +227,7 @@ const handleHotUpdate = (newHot) => {
           <span class="map-count num">{{ weatherStore.cities.length }}개 지역</span>
         </div>
 
-        <KoreaMap
-          :cities="weatherStore.cities"
-          :selected-id="selectedCityInfo === null ? '' : selectedCityInfo.id"
-          @select-city="handleSelectFromMap"
-        />
+        <KoreaMap :cities="weatherStore.cities" :selected-id="selectedCityInfo === null ? '' : selectedCityInfo.id" @select-city="handleSelectFromMap" />
       </div>
 
       <div class="info-col">
@@ -280,15 +268,7 @@ const handleHotUpdate = (newHot) => {
 
           <template v-else>
             <p class="loc-desc">현재 위치의 날씨와 러닝 지수를 확인할 수 있습니다.</p>
-            <el-button
-              type="primary"
-              size="small"
-              :icon="Location"
-              :loading="weatherStore.locating"
-              @click="weatherStore.loadMyLocation()"
-            >
-              위치 연결
-            </el-button>
+            <el-button type="primary" size="small" :icon="Location" :loading="weatherStore.locating" @click="weatherStore.loadMyLocation()"> 위치 연결 </el-button>
             <p v-if="weatherStore.locationError !== ''" class="loc-error">
               {{ weatherStore.locationError }}
             </p>
@@ -305,32 +285,17 @@ const handleHotUpdate = (newHot) => {
       <SearchBar :query="searchQuery" @update-query="handleQueryUpdate" />
 
       <div class="area-tabs">
-        <button
-          v-for="area in areas"
-          :key="area"
-          class="area-tab"
-          :class="selectedArea === area ? 'is-on' : ''"
-          @click="selectedArea = area"
-        >
+        <button v-for="area in areas" :key="area" class="area-tab" :class="selectedArea === area ? 'is-on' : ''" @click="selectedArea = area">
           {{ area }}
         </button>
       </div>
 
-      <ViewOptions
-        :sort-type="sortType"
-        :only-hot="onlyHot"
-        @update-sort="handleSortUpdate"
-        @update-hot="handleHotUpdate"
-      />
+      <ViewOptions :sort-type="sortType" :only-hot="onlyHot" @update-sort="handleSortUpdate" @update-hot="handleHotUpdate" />
     </section>
 
     <section>
       <div class="list-head">
-        <SearchNotice
-          :state="searchState"
-          :query="searchQuery"
-          :count="filteredWeatherList.length"
-        />
+        <SearchNotice :state="searchState" :query="searchQuery" :count="filteredWeatherList.length" />
         <p class="summary num">{{ summary }}</p>
       </div>
 
@@ -379,9 +344,7 @@ const handleHotUpdate = (newHot) => {
   display: flex;
   flex-direction: column;
   padding: 18px;
-  background:
-    radial-gradient(90% 60% at 50% 0%, var(--accent-soft) 0%, transparent 55%),
-    var(--surface);
+  background: radial-gradient(90% 60% at 50% 0%, var(--accent-soft) 0%, transparent 55%), var(--surface);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius);
   box-shadow: var(--shadow), var(--edge);

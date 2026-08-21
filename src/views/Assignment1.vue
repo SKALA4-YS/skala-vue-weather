@@ -112,12 +112,7 @@ const visibleList = () => {
         [요구사항 4] 여기에 건 @click은 WeatherCard의 루트 엘리먼트로 전달되어,
                      카드 아무 곳이나 누르면 selectCity가 실행된다.
       -->
-      <WeatherCard
-        v-for="city in visibleList()"
-        :key="city.id"
-        :city="city"
-        @click="selectCity(city.name)"
-      />
+      <WeatherCard v-for="city in visibleList()" :key="city.id" :city="city" @click="selectCity(city.name)" />
 
       <p v-if="visibleList().length === 0" class="empty">조건에 맞는 도시가 없습니다.</p>
     </section>

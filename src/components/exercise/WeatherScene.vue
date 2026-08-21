@@ -75,14 +75,7 @@ const skyStyle = computed(() => ({
     <svg class="layer" viewBox="0 0 100 100" preserveAspectRatio="none">
       <!-- 별 -->
       <g v-if="scene.showStars.value" class="stars">
-        <circle
-          v-for="star in stars"
-          :key="star.id"
-          :cx="star.x"
-          :cy="star.y"
-          :r="star.r * 0.12"
-          :style="{ animationDelay: `${star.delay}s` }"
-        />
+        <circle v-for="star in stars" :key="star.id" :cx="star.x" :cy="star.y" :r="star.r * 0.12" :style="{ animationDelay: `${star.delay}s` }" />
       </g>
 
       <!-- 해와 달 -->
@@ -110,57 +103,23 @@ const skyStyle = computed(() => ({
       <template v-if="scene.backdrop.value === 'city'">
         <g class="city">
           <g v-for="building in buildings" :key="building.x">
-            <rect
-              :x="building.x"
-              :y="100 - building.h"
-              :width="building.w"
-              :height="building.h"
-            />
-            <rect
-              v-for="win in windowsOf(building)"
-              :key="win.id"
-              class="window"
-              :class="win.lit ? 'is-lit' : ''"
-              :x="win.x"
-              :y="win.y"
-              width="1.5"
-              :height="1.6"
-            />
+            <rect :x="building.x" :y="100 - building.h" :width="building.w" :height="building.h" />
+            <rect v-for="win in windowsOf(building)" :key="win.id" class="window" :class="win.lit ? 'is-lit' : ''" :x="win.x" :y="win.y" width="1.5" :height="1.6" />
           </g>
         </g>
       </template>
 
       <template v-else>
         <!-- 언덕 두 겹으로 원근을 만든다 -->
-        <path
-          class="hill hill-far"
-          :fill="scene.foliage.value.groundDark"
-          d="M0,78 Q18,66 34,74 Q52,84 68,70 Q84,58 100,72 L100,100 L0,100 Z"
-        />
+        <path class="hill hill-far" :fill="scene.foliage.value.groundDark" d="M0,78 Q18,66 34,74 Q52,84 68,70 Q84,58 100,72 L100,100 L0,100 Z" />
         <g class="trees">
           <g v-for="tree in trees" :key="tree.x" :transform="`translate(${tree.x}, 0)`">
             <rect class="trunk" x="-0.5" y="80" width="1" height="8" />
-            <ellipse
-              :fill="scene.foliage.value.leaf"
-              cx="0"
-              cy="78"
-              :rx="3.2 * tree.s"
-              :ry="4.4 * tree.s"
-            />
-            <ellipse
-              :fill="scene.foliage.value.leafDark"
-              cx="-1"
-              cy="80"
-              :rx="2.2 * tree.s"
-              :ry="3 * tree.s"
-            />
+            <ellipse :fill="scene.foliage.value.leaf" cx="0" cy="78" :rx="3.2 * tree.s" :ry="4.4 * tree.s" />
+            <ellipse :fill="scene.foliage.value.leafDark" cx="-1" cy="80" :rx="2.2 * tree.s" :ry="3 * tree.s" />
           </g>
         </g>
-        <path
-          class="hill hill-near"
-          :fill="scene.foliage.value.ground"
-          d="M0,88 Q24,82 46,88 Q70,94 100,86 L100,100 L0,100 Z"
-        />
+        <path class="hill hill-near" :fill="scene.foliage.value.ground" d="M0,88 Q24,82 46,88 Q70,94 100,86 L100,100 L0,100 Z" />
       </template>
     </svg>
 
@@ -209,7 +168,6 @@ const skyStyle = computed(() => ({
         }"
       />
     </div>
-  
   </div>
 </template>
 

@@ -52,14 +52,7 @@ const stats = computed(() => [
 
     <header class="head">
       <p class="eyebrow">{{ label }}</p>
-      <img
-        v-if="city.icon"
-        class="icon"
-        :src="iconUrl(city.icon)"
-        :alt="city.status"
-        width="64"
-        height="64"
-      />
+      <img v-if="city.icon" class="icon" :src="iconUrl(city.icon)" :alt="city.status" width="64" height="64" />
     </header>
 
     <p class="place">
@@ -73,10 +66,7 @@ const stats = computed(() => [
       <div class="score-side">
         <p class="grade" :style="{ color: scoreColor }">{{ index.grade.label }}</p>
         <div class="bar">
-          <div
-            class="bar-fill"
-            :style="{ width: `${index.score}%`, backgroundColor: scoreColor }"
-          />
+          <div class="bar-fill" :style="{ width: `${index.score}%`, backgroundColor: scoreColor }" />
         </div>
         <p class="comment">{{ index.grade.comment }}</p>
       </div>
@@ -100,9 +90,7 @@ const stats = computed(() => [
 .hero {
   position: relative;
   padding: 22px;
-  background:
-    radial-gradient(120% 130% at 92% 0%, var(--accent-soft) 0%, transparent 56%),
-    var(--surface);
+  background: radial-gradient(120% 130% at 92% 0%, var(--accent-soft) 0%, transparent 56%), var(--surface);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius);
   box-shadow: var(--shadow), var(--edge);
@@ -115,11 +103,7 @@ const stats = computed(() => [
   right: -40px;
   width: 220px;
   height: 150px;
-  background: repeating-linear-gradient(
-    115deg,
-    var(--accent) 0 3px,
-    transparent 3px 13px
-  );
+  background: repeating-linear-gradient(115deg, var(--accent) 0 3px, transparent 3px 13px);
   opacity: 0.16;
   transform: skewX(-8deg);
   pointer-events: none;

@@ -85,25 +85,11 @@ const outfitTips = computed(() => {
         <p class="area">{{ city.area }}</p>
       </div>
 
-      <el-button
-        :icon="favoriteStore.isFavorite(city.id) ? StarFilled : Star"
-        :class="favoriteStore.isFavorite(city.id) ? 'fav-on' : ''"
-        circle
-        size="small"
-        text
-        @click.stop="handleToggleFavorite"
-      />
+      <el-button :icon="favoriteStore.isFavorite(city.id) ? StarFilled : Star" :class="favoriteStore.isFavorite(city.id) ? 'fav-on' : ''" circle size="small" text @click.stop="handleToggleFavorite" />
     </div>
 
     <div class="mid">
-      <img
-        v-if="city.icon"
-        class="icon"
-        :src="iconUrl(city.icon)"
-        :alt="city.status"
-        width="52"
-        height="52"
-      />
+      <img v-if="city.icon" class="icon" :src="iconUrl(city.icon)" :alt="city.status" width="52" height="52" />
       <div>
         <p class="temp num">{{ displayTempText }}</p>
         <p class="status">{{ city.status }}</p>

@@ -25,7 +25,9 @@ const route = useRoute()
     </p>
 
     <!-- Catch-all이 잡아낸 실제 경로. route.path로 확인할 수 있다. -->
-    <p class="path">입력한 주소: <code>{{ route.path }}</code></p>
+    <p class="path">
+      입력한 주소: <code>{{ route.path }}</code>
+    </p>
 
     <RouterLink class="home-btn" to="/">날씨 메인으로 이동</RouterLink>
   </div>

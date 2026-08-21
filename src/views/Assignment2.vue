@@ -140,10 +140,7 @@ watch([sortType, onlyHot], ([newSort, newHot], [oldSort, oldHot]) => {
 watch(
   () => filteredWeatherList.value.length,
   (newCount, oldCount) => {
-    const message =
-      newCount === 0
-        ? `🚨 [watch 결과 감시] 검색 결과가 ${oldCount}건 → 0건이 되었습니다.`
-        : `🔍 [watch 결과 감시] 검색 결과가 ${oldCount}건 → ${newCount}건으로 바뀌었습니다.`
+    const message = newCount === 0 ? `🚨 [watch 결과 감시] 검색 결과가 ${oldCount}건 → 0건이 되었습니다.` : `🔍 [watch 결과 감시] 검색 결과가 ${oldCount}건 → ${newCount}건으로 바뀌었습니다.`
 
     console.log(message)
     addLog(message)
@@ -217,30 +214,16 @@ const selectCity = (city) => {
       <h2>📍 지역별 날씨 현황</h2>
 
       <!-- [요구사항 4] 검색 상태에 따른 안내 문구 -->
-      <p v-if="searchState === 'empty'" class="notice notice-plain">
-        검색어가 비어 있어 전체 도시를 보여줍니다.
-      </p>
-      <p v-else-if="searchState === 'found'" class="notice notice-found">
-        '{{ searchQuery }}' 검색 결과 {{ filteredWeatherList.length }}건을 찾았습니다.
-      </p>
-      <p v-else class="notice notice-none">
-        '{{ searchQuery }}' 와(과) 검색 결과가 일치하는 도시가 없습니다.
-      </p>
+      <p v-if="searchState === 'empty'" class="notice notice-plain">검색어가 비어 있어 전체 도시를 보여줍니다.</p>
+      <p v-else-if="searchState === 'found'" class="notice notice-found">'{{ searchQuery }}' 검색 결과 {{ filteredWeatherList.length }}건을 찾았습니다.</p>
+      <p v-else class="notice notice-none">'{{ searchQuery }}' 와(과) 검색 결과가 일치하는 도시가 없습니다.</p>
 
       <!-- 검색 결과가 있을 때만 목록을 그린다. -->
       <template v-if="searchState !== 'none'">
-        <WeatherCard
-          v-for="city in visibleWeatherList"
-          :key="city.id"
-          :city="city"
-          :selected="selectedCityInfo !== null && selectedCityInfo.id === city.id"
-          @click="selectCity(city)"
-        />
+        <WeatherCard v-for="city in visibleWeatherList" :key="city.id" :city="city" :selected="selectedCityInfo !== null && selectedCityInfo.id === city.id" @click="selectCity(city)" />
 
         <!-- 검색은 됐지만 보기 설정 때문에 하나도 안 남은 경우 -->
-        <p v-if="visibleWeatherList.length === 0" class="notice notice-plain">
-          보기 설정 조건에 맞는 도시가 없습니다.
-        </p>
+        <p v-if="visibleWeatherList.length === 0" class="notice notice-plain">보기 설정 조건에 맞는 도시가 없습니다.</p>
 
         <p class="summary">{{ summary }}</p>
       </template>
@@ -252,14 +235,11 @@ const selectCity = (city) => {
       <p class="effect-line">{{ effectMessage }}</p>
       <ul class="log-list">
         <li v-for="log in watchLogs" :key="log.id">{{ log.text }}</li>
-        <li v-if="watchLogs.length === 0" class="log-empty">
-          아직 감지된 변화가 없습니다. 카드를 클릭하거나 보기 설정을 바꿔 보세요.
-        </li>
+        <li v-if="watchLogs.length === 0" class="log-empty">아직 감지된 변화가 없습니다. 카드를 클릭하거나 보기 설정을 바꿔 보세요.</li>
       </ul>
       <small class="hint">
         ※ 같은 내용이 브라우저 콘솔(F12)에도 그대로 출력됩니다.<br />
-        ※ 위 주황색 줄은 watchEffect가 남긴 것으로, 새로고침 직후 아무것도 누르지 않아도
-        초기값('대기 중...')이 이미 덮어써져 있습니다. 최초 1회 즉시 실행되기 때문입니다.
+        ※ 위 주황색 줄은 watchEffect가 남긴 것으로, 새로고침 직후 아무것도 누르지 않아도 초기값('대기 중...')이 이미 덮어써져 있습니다. 최초 1회 즉시 실행되기 때문입니다.
       </small>
     </section>
 

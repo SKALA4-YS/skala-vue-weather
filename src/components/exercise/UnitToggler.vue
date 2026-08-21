@@ -15,13 +15,7 @@ const handleChange = (isFahrenheit) => {
 <template>
   <div class="unit-toggler">
     <span class="label">{{ configStore.unitSymbol }}</span>
-    <el-switch
-      :model-value="configStore.unit === 'fahrenheit'"
-      active-text="F"
-      inactive-text="C"
-      inline-prompt
-      @change="handleChange"
-    />
+    <el-switch :model-value="configStore.unit === 'fahrenheit'" active-text="F" inactive-text="C" inline-prompt @change="handleChange" />
   </div>
 </template>
 

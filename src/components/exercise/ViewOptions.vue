@@ -39,29 +39,15 @@ const favoriteStore = useFavoriteStore()
 
 <template>
   <div class="view-options">
-    <el-select
-      :model-value="sortType"
-      size="small"
-      class="sort-select"
-      @change="handleSortChange"
-    >
-      <el-option
-        v-for="option in sortOptions"
-        :key="option.value"
-        :label="option.label"
-        :value="option.value"
-      />
+    <el-select :model-value="sortType" size="small" class="sort-select" @change="handleSortChange">
+      <el-option v-for="option in sortOptions" :key="option.value" :label="option.label" :value="option.value" />
     </el-select>
 
-    <el-checkbox :model-value="onlyHot" size="small" @change="handleHotChange">
-      25도 이상
-    </el-checkbox>
+    <el-checkbox :model-value="onlyHot" size="small" @change="handleHotChange"> 25도 이상 </el-checkbox>
 
     <!-- 스토어 state는 읽기 전용이 아니라서 v-model을 그대로 걸 수 있다.
          props였다면 자식이 수정하는 셈이라 경고가 났다. -->
-    <el-checkbox v-model="favoriteStore.showOnlyFavorite" size="small">
-      즐겨찾기 {{ favoriteStore.favoriteCount }}
-    </el-checkbox>
+    <el-checkbox v-model="favoriteStore.showOnlyFavorite" size="small"> 즐겨찾기 {{ favoriteStore.favoriteCount }} </el-checkbox>
   </div>
 </template>
 

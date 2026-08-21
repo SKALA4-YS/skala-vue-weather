@@ -66,8 +66,7 @@ export const fetchCitiesWeather = async (cityList) => {
       params: {
         latitude,
         longitude,
-        current:
-          'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation',
+        current: 'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation',
         hourly: 'precipitation_probability',
         forecast_hours: 1,
         timezone: 'Asia/Seoul',

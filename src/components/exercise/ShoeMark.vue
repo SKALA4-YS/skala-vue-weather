@@ -10,14 +10,7 @@ defineProps({
 </script>
 
 <template>
-  <svg
-    class="shoe"
-    :width="size"
-    :height="size"
-    viewBox="0 0 40 40"
-    role="img"
-    aria-label="러닝 웨더"
-  >
+  <svg class="shoe" :width="size" :height="size" viewBox="0 0 40 40" role="img" aria-label="러닝 웨더">
     <rect class="plate" x="0" y="0" width="40" height="40" rx="12" />
 
     <g transform="translate(4.5, 9)">

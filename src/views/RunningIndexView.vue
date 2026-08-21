@@ -7,12 +7,7 @@ import { useWeatherStore } from '../stores/weatherStore'
 import { useFavoriteStore } from '../stores/favoriteStore'
 import { useConfigStore } from '../stores/configStore'
 import { fetchSunAndUv } from '../services/openMeteoApi'
-import {
-  calcRunningIndex,
-  calcHydration,
-  buildHourlyIndex,
-  pickBestWorst,
-} from '../composables/useRunningIndex'
+import { calcRunningIndex, calcHydration, buildHourlyIndex, pickBestWorst } from '../composables/useRunningIndex'
 
 const route = useRoute()
 const router = useRouter()
@@ -51,9 +46,7 @@ const scoreColorHex = computed(() => {
   return configStore.isDark ? '#ff5470' : '#e5484d'
 })
 
-const hourly = computed(() =>
-  buildHourlyIndex(weatherStore.forecastOf(city.value.id), city.value.pm10, uvIndex.value),
-)
+const hourly = computed(() => buildHourlyIndex(weatherStore.forecastOf(city.value.id), city.value.pm10, uvIndex.value))
 
 const bestWorst = computed(() => pickBestWorst(hourly.value))
 
@@ -117,12 +110,7 @@ const handleClearFavorites = () => {
         </div>
 
         <el-select v-model="selectedId" size="small" class="city-select" filterable>
-          <el-option
-            v-for="item in weatherStore.cities"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
+          <el-option v-for="item in weatherStore.cities" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
 
@@ -138,12 +126,7 @@ const handleClearFavorites = () => {
         </div>
 
         <!-- 교재가 강조한 el-progress. 점수를 색까지 바꿔가며 보여 준다 -->
-        <el-progress
-          :percentage="index.score"
-          :color="scoreColorHex"
-          :show-text="false"
-          :stroke-width="8"
-        />
+        <el-progress :percentage="index.score" :color="scoreColorHex" :show-text="false" :stroke-width="8" />
 
         <div class="stat-row">
           <div class="stat">
@@ -156,9 +139,7 @@ const handleClearFavorites = () => {
             <p class="stat-value num">
               {{ bestWorst.worst === null ? '-' : bestWorst.worst.hour }}
             </p>
-            <p class="stat-sub num" v-if="bestWorst.worst !== null">
-              {{ bestWorst.worst.score }}점
-            </p>
+            <p class="stat-sub num" v-if="bestWorst.worst !== null">{{ bestWorst.worst.score }}점</p>
           </div>
           <div class="stat">
             <p class="stat-label">수분</p>
@@ -183,54 +164,27 @@ const handleClearFavorites = () => {
       <p v-else class="all-clear">깎인 항목이 없습니다. 조건이 아주 좋은 날입니다.</p>
 
       <div v-if="goodFactors.length > 0" class="good">
-        <el-tag
-          v-for="factor in goodFactors"
-          :key="factor.key"
-          size="small"
-          type="info"
-          effect="plain"
-        >
-          {{ factor.label }} {{ factor.value }}
-        </el-tag>
+        <el-tag v-for="factor in goodFactors" :key="factor.key" size="small" type="info" effect="plain"> {{ factor.label }} {{ factor.value }} </el-tag>
       </div>
 
       <el-alert type="info" :closable="false" class="disclaimer">
-        체감온도 10~18도를 기준 구간으로 두고 환경부 미세먼지 등급(30/80/150)을 참고해 잡은 자체
-        배점입니다. 의학적 기준이 아니며 실제 컨디션은 개인차와 코스 상태에 따라 달라집니다.
+        체감온도 10~18도를 기준 구간으로 두고 환경부 미세먼지 등급(30/80/150)을 참고해 잡은 자체 배점입니다. 의학적 기준이 아니며 실제 컨디션은 개인차와 코스 상태에 따라 달라집니다.
       </el-alert>
     </section>
 
     <section class="surface block">
       <p class="section-label">시간대별 러닝 지수</p>
 
-      <LineChart
-        v-if="hourly.length > 0"
-        :labels="hourly.map((item) => item.hour)"
-        :values="hourly.map((item) => item.score)"
-      />
+      <LineChart v-if="hourly.length > 0" :labels="hourly.map((item) => item.hour)" :values="hourly.map((item) => item.score)" />
       <p v-else class="all-clear">예보 데이터가 없어 시간대별 점수를 계산할 수 없습니다.</p>
 
       <p class="note">OpenWeatherMap 3시간 예보 · 미세먼지는 현재 값 적용</p>
     </section>
 
     <div class="actions">
-      <el-button
-        type="primary"
-        size="small"
-        @click="router.push({ name: 'weather-detail', params: { cityId: city.id } })"
-      >
-        {{ city.name }} 상세 보기
-      </el-button>
+      <el-button type="primary" size="small" @click="router.push({ name: 'weather-detail', params: { cityId: city.id } })"> {{ city.name }} 상세 보기 </el-button>
       <el-button size="small" @click="router.push('/')">대시보드</el-button>
-      <el-button
-        v-if="favoriteStore.hasFavorite"
-        size="small"
-        text
-        type="danger"
-        @click="handleClearFavorites"
-      >
-        즐겨찾기 비우기
-      </el-button>
+      <el-button v-if="favoriteStore.hasFavorite" size="small" text type="danger" @click="handleClearFavorites"> 즐겨찾기 비우기 </el-button>
     </div>
   </div>
 </template>
@@ -244,9 +198,7 @@ const handleClearFavorites = () => {
 
 .hero {
   padding: 20px;
-  background:
-    radial-gradient(120% 130% at 88% 0%, var(--accent-soft) 0%, transparent 58%),
-    var(--surface);
+  background: radial-gradient(120% 130% at 88% 0%, var(--accent-soft) 0%, transparent 58%), var(--surface);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius);
   box-shadow: var(--shadow);

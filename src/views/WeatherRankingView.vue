@@ -95,13 +95,7 @@ const goDetail = (city) => {
       <template #title>도시 순위</template>
 
       <div class="sort-tabs">
-        <button
-          v-for="tab in TABS"
-          :key="tab.key"
-          class="sort-tab"
-          :class="sortBy === tab.key ? 'sort-active' : ''"
-          @click="changeSort(tab.key)"
-        >
+        <button v-for="tab in TABS" :key="tab.key" class="sort-tab" :class="sortBy === tab.key ? 'sort-active' : ''" @click="changeSort(tab.key)">
           {{ tab.label }}
         </button>
       </div>
@@ -109,7 +103,9 @@ const goDetail = (city) => {
       <ol class="rank-list">
         <li v-for="(city, index) in rankedList" :key="city.id" @click="goDetail(city)">
           <span class="rank-no">{{ index + 1 }}</span>
-          <span class="rank-name">{{ city.name }}<em>{{ city.area }}</em></span>
+          <span class="rank-name"
+            >{{ city.name }}<em>{{ city.area }}</em></span
+          >
 
           <span v-if="sortBy === 'running'" class="rank-value">
             <span class="run-sub num">{{ tempText(city.temp) }}</span>
@@ -129,9 +125,7 @@ const goDetail = (city) => {
         </li>
       </ol>
 
-      <template #footer>
-        행을 클릭하면 해당 지역의 상세 관측 정보로 이동합니다.
-      </template>
+      <template #footer> 행을 클릭하면 해당 지역의 상세 관측 정보로 이동합니다. </template>
     </BaseDashboardCard>
   </div>
 </template>

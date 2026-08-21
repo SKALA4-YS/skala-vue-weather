@@ -108,9 +108,7 @@ export const calcRunningIndex = (weather) => {
     score,
     grade: gradeOf(score),
     // 많이 깎인 순으로 정렬해 두면 화면에서 '무엇이 문제인지'가 위에 온다
-    factors: factors
-      .map((factor) => ({ ...factor, delta: Math.round(factor.delta) }))
-      .sort((a, b) => a.delta - b.delta),
+    factors: factors.map((factor) => ({ ...factor, delta: Math.round(factor.delta) })).sort((a, b) => a.delta - b.delta),
   }
 }
 

@@ -19,10 +19,7 @@ const stack = [
     <section class="surface intro">
       <p class="section-label">실습 아카이브</p>
       <h2 class="title">7일간 무엇을 만들었나</h2>
-      <p class="desc">
-        하나의 날씨 화면을 매일 다른 방식으로 다시 만들었습니다.
-        1~3일차 결과물은 지금도 그대로 남겨 두어 비교할 수 있습니다.
-      </p>
+      <p class="desc">하나의 날씨 화면을 매일 다른 방식으로 다시 만들었습니다. 1~3일차 결과물은 지금도 그대로 남겨 두어 비교할 수 있습니다.</p>
 
       <div class="stack">
         <div v-for="item in stack" :key="item.name" class="stack-item">
@@ -32,11 +29,7 @@ const stack = [
       </div>
     </section>
 
-    <section
-      v-for="entry in practiceDays"
-      :key="entry.day"
-      class="surface day"
-    >
+    <section v-for="entry in practiceDays" :key="entry.day" class="surface day">
       <div class="day-head">
         <div class="day-no">{{ entry.day }}</div>
         <div>
@@ -56,9 +49,7 @@ const stack = [
       </p>
     </section>
 
-    <RouterLink to="/troubleshooting" class="cta">
-      막혔던 문제 {{ troubles.length }}건 보러 가기
-    </RouterLink>
+    <RouterLink to="/troubleshooting" class="cta"> 막혔던 문제 {{ troubles.length }}건 보러 가기 </RouterLink>
   </div>
 </template>
 

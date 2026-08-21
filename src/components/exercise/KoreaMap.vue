@@ -103,23 +103,8 @@ const viewBox = computed(() => `-30 -150 ${MAP_W + 60} ${MAP_H * TILT + 190}`)
           <ellipse class="pin-shadow" :cx="point.x" :cy="point.baseY" rx="11" ry="4" />
 
           <!-- 기둥. 오른쪽에 어두운 면을 덧대 입체로 보이게 한다 -->
-          <rect
-            class="pin-bar"
-            :x="point.x - 5"
-            :y="point.baseY - point.height"
-            width="10"
-            :height="point.height"
-            rx="4"
-            :fill="point.color"
-          />
-          <rect
-            class="pin-bar-side"
-            :x="point.x + 1.5"
-            :y="point.baseY - point.height"
-            width="3.5"
-            :height="point.height"
-            rx="1.6"
-          />
+          <rect class="pin-bar" :x="point.x - 5" :y="point.baseY - point.height" width="10" :height="point.height" rx="4" :fill="point.color" />
+          <rect class="pin-bar-side" :x="point.x + 1.5" :y="point.baseY - point.height" width="3.5" :height="point.height" rx="1.6" />
 
           <!-- 꼭대기 점수 알약 -->
           <g class="pin-cap" :transform="`translate(${point.x}, ${point.baseY - point.height})`">
@@ -128,12 +113,7 @@ const viewBox = computed(() => `-30 -150 ${MAP_W + 60} ${MAP_H * TILT + 190}`)
           </g>
 
           <!-- 이름은 고르거나 마우스를 올렸을 때만. 30개를 다 쓰면 수도권이 겹쳐 못 읽는다 -->
-          <text
-            v-if="point.active"
-            class="pin-name"
-            :x="point.x"
-            :y="point.baseY - point.height - 26"
-          >
+          <text v-if="point.active" class="pin-name" :x="point.x" :y="point.baseY - point.height - 26">
             {{ point.city.name }}
           </text>
         </g>

@@ -102,8 +102,7 @@ export const troubles = [
     title: '한글을 입력하면 글자가 깨짐',
     tag: '반응형',
     symptom: "검색창에 '서울'을 치면 '서서울', '서우ㄹ'처럼 어긋난 글자가 남았다.",
-    cause:
-      '한글은 자음·모음을 조합해 한 글자를 만든다. 조합 중인 미완성 값까지 @input으로 들어오는데, 그 값을 상태에 넣으면 :value가 input을 다시 덮어써서 브라우저의 조합 버퍼가 끊긴다.',
+    cause: '한글은 자음·모음을 조합해 한 글자를 만든다. 조합 중인 미완성 값까지 @input으로 들어오는데, 그 값을 상태에 넣으면 :value가 input을 다시 덮어써서 브라우저의 조합 버퍼가 끊긴다.',
     fix: 'compositionstart / compositionend로 조합 여부를 플래그에 두고, 조합 중 들어오는 input은 무시한 뒤 조합이 끝난 확정 값만 반영했다. Vue의 v-model 내부 구현(vModelText)이 쓰는 방식과 같다.',
     file: 'components/exercise/SearchBar.vue',
   },
@@ -112,10 +111,8 @@ export const troubles = [
     day: 3,
     title: 'scoped 스타일이 slot 내용에 적용되지 않음',
     tag: '스타일',
-    symptom:
-      'BaseDashboardCard의 <style scoped>에서 .card-body p를 지정했는데 슬롯으로 들어온 내용에 먹지 않았다.',
-    cause:
-      '슬롯으로 전달되는 내용은 부모 스코프에서 컴파일되어 부모의 data-v 속성을 달고 온다. 자식의 scoped 셀렉터 조건과 맞지 않는다.',
+    symptom: 'BaseDashboardCard의 <style scoped>에서 .card-body p를 지정했는데 슬롯으로 들어온 내용에 먹지 않았다.',
+    cause: '슬롯으로 전달되는 내용은 부모 스코프에서 컴파일되어 부모의 data-v 속성을 달고 온다. 자식의 scoped 셀렉터 조건과 맞지 않는다.',
     fix: '슬롯에 들어갈 컴포넌트가 각자 자기 <style scoped>를 갖게 했다. 3일차 요구사항(컴포넌트별 스타일 분리)과도 맞는 방향이었다.',
     file: 'components/exercise/BaseDashboardCard.vue',
   },
@@ -124,10 +121,8 @@ export const troubles = [
     day: 4,
     title: '상세 화면에서 다른 지역으로 이동해도 내용이 그대로',
     tag: '라우터',
-    symptom:
-      '상세 화면의 이전/다음 지역 링크를 눌러도 주소만 바뀌고 화면 내용이 바뀌지 않았다.',
-    cause:
-      '경로 규칙이 같으면(/weather/:cityId → /weather/:cityId) Vue가 컴포넌트를 재사용한다. unmount → mount가 일어나지 않아 onMounted가 다시 실행되지 않는다.',
+    symptom: '상세 화면의 이전/다음 지역 링크를 눌러도 주소만 바뀌고 화면 내용이 바뀌지 않았다.',
+    cause: '경로 규칙이 같으면(/weather/:cityId → /weather/:cityId) Vue가 컴포넌트를 재사용한다. unmount → mount가 일어나지 않아 onMounted가 다시 실행되지 않는다.',
     fix: 'route.params.cityId 자체를 watch해서 파라미터만 바뀌는 이동도 잡아냈다. <RouterView :key="$route.fullPath">로 강제 재생성하는 방법도 있지만 매번 다시 그리는 비용이 든다.',
     file: 'views/WeatherDetailView.vue',
   },
@@ -137,8 +132,7 @@ export const troubles = [
     title: 'API Key를 넣었는데 401이 계속 남',
     tag: 'API',
     symptom: '키를 .env에 넣고 서버를 재시작해도 Invalid API key가 반환됐다.',
-    cause:
-      '키 형식은 정상이었고, OpenWeatherMap이 발급 직후 키를 바로 활성화하지 않기 때문이었다. curl로 직접 호출해 앱 코드 문제가 아님을 먼저 확인했다.',
+    cause: '키 형식은 정상이었고, OpenWeatherMap이 발급 직후 키를 바로 활성화하지 않기 때문이었다. curl로 직접 호출해 앱 코드 문제가 아님을 먼저 확인했다.',
     fix: '기다렸다가 다시 호출해 정상 응답을 확인했다. 그 사이에도 앱이 동작하도록, 키가 없거나 실패하면 폴백 데이터로 화면을 그리고 안내만 띄우게 만들어 두었다.',
     file: 'services/weatherApi.js',
   },
@@ -148,8 +142,7 @@ export const troubles = [
     title: '.env에 넣어야 할 키를 .env.example에 넣음',
     tag: '보안',
     symptom: '실제 API Key가 커밋 대상 파일(.env.example)에 들어가 있었다.',
-    cause:
-      '.env는 gitignore 대상이지만 .env.example은 커밋된다. 두 파일의 역할을 혼동하면 키가 그대로 저장소에 올라간다.',
+    cause: '.env는 gitignore 대상이지만 .env.example은 커밋된다. 두 파일의 역할을 혼동하면 키가 그대로 저장소에 올라간다.',
     fix: '키를 .env로 옮기고 .env.example은 이름만 남겼다. git status에 .env가 뜨지 않는 것까지 확인했다. 커밋 이력이 없던 시점이라 유출은 없었다.',
     file: '.env.example',
   },
@@ -158,10 +151,8 @@ export const troubles = [
     day: 7,
     title: 'PrimeVue 설치 후 빌드가 테마를 찾지 못함',
     tag: '의존성',
-    symptom:
-      'Rolldown failed to resolve import "@primeuix/themes/aura" 오류로 빌드가 실패했다.',
-    cause:
-      'npm이 PrimeVue 5를 설치했는데 5는 테마 패키지 경로가 다르고 @primeui/license-manager 의존이 붙는다. 불필요한 @primevue/themes를 제거하는 과정에서 실제 테마 패키지까지 함께 삭제됐다.',
+    symptom: 'Rolldown failed to resolve import "@primeuix/themes/aura" 오류로 빌드가 실패했다.',
+    cause: 'npm이 PrimeVue 5를 설치했는데 5는 테마 패키지 경로가 다르고 @primeui/license-manager 의존이 붙는다. 불필요한 @primevue/themes를 제거하는 과정에서 실제 테마 패키지까지 함께 삭제됐다.',
     fix: '학습 자료가 많고 라이선스 게이팅이 없는 PrimeVue 4로 내려 맞췄다. 이후 교재가 다루는 Element Plus로 전환하면서 이 의존성은 모두 정리했다.',
     file: 'package.json',
   },
@@ -171,8 +162,7 @@ export const troubles = [
     title: 'OS가 다크 모드면 화면이 깨짐',
     tag: '스타일',
     symptom: '흰 배경 카드 위에 검은 버튼이 놓여 대비가 무너졌다.',
-    cause:
-      'PrimeVue의 darkModeSelector 기본값이 system이라 OS 설정을 따라 컴포넌트만 어두워졌다. 직접 만든 스타일은 밝은 상태 그대로였다.',
+    cause: 'PrimeVue의 darkModeSelector 기본값이 system이라 OS 설정을 따라 컴포넌트만 어두워졌다. 직접 만든 스타일은 밝은 상태 그대로였다.',
     fix: '존재하지 않는 셀렉터를 지정해 자동 전환을 껐다. 이후 라이트/다크를 직접 지원하면서, html의 클래스를 앱이 제어하는 방식으로 정리했다.',
     file: 'src/main.js',
   },
@@ -182,8 +172,7 @@ export const troubles = [
     title: '지역을 30개로 늘리자 429가 발생',
     tag: 'API',
     symptom: '목록을 두 번 새로고침하면 호출 한도 초과 응답이 왔다.',
-    cause:
-      '30개 지역 × 3개 엔드포인트 = 90회. OpenWeatherMap 무료 요금제는 분당 60회다.',
+    cause: '30개 지역 × 3개 엔드포인트 = 90회. OpenWeatherMap 무료 요금제는 분당 60회다.',
     fix: '데이터 출처를 나눴다. 목록은 좌표를 콤마로 이어 붙여 한 번에 조회할 수 있는 Open-Meteo로 바꿔 2회로 줄이고, 예보·대기오염이 필요한 상세 화면에서만 OpenWeatherMap을 호출한다. 한 번 받은 지역은 다시 부르지 않는다.',
     file: 'services/openMeteoApi.js',
   },
@@ -193,8 +182,7 @@ export const troubles = [
     title: '다크 모드로 바꿔도 차트 색이 그대로',
     tag: '스타일',
     symptom: '테마를 전환하면 화면은 바뀌는데 그래프 선과 눈금만 이전 색으로 남았다.',
-    cause:
-      'Chart.js는 캔버스에 직접 그리기 때문에 CSS 변수(var(--accent))를 읽지 못한다. 문자열이 그대로 색으로 해석되지 않는다.',
+    cause: 'Chart.js는 캔버스에 직접 그리기 때문에 CSS 변수(var(--accent))를 읽지 못한다. 문자열이 그대로 색으로 해석되지 않는다.',
     fix: 'configStore.isDark를 보고 실제 색값을 계산해 넘기고, 테마 변경을 watch해서 차트를 destroy 후 다시 그린다. el-progress의 color 속성도 같은 이유로 색값을 넘겨야 했다.',
     file: 'components/exercise/LineChart.vue',
   },
@@ -204,8 +192,7 @@ export const troubles = [
     title: 'Element Plus로 바꾸자 정렬 드롭다운이 동작하지 않음',
     tag: 'UI',
     symptom: '정렬을 바꿔도 목록 순서가 그대로였다.',
-    cause:
-      '기본 <select>는 @change에 이벤트 객체를 넘겨 e.target.value로 값을 꺼내지만, el-select는 값 자체를 넘긴다. e.target.value가 undefined가 됐다.',
+    cause: '기본 <select>는 @change에 이벤트 객체를 넘겨 e.target.value로 값을 꺼내지만, el-select는 값 자체를 넘긴다. e.target.value가 undefined가 됐다.',
     fix: '핸들러가 값을 직접 받도록 고쳤다. 다만 같은 파일의 @compositionend는 네이티브 이벤트라 여전히 e.target.value를 쓴다. 한 컴포넌트 안에 두 방식이 섞여 있다는 점을 주석에 남겼다.',
     file: 'components/exercise/ViewOptions.vue',
   },
@@ -214,10 +201,8 @@ export const troubles = [
     day: 7,
     title: '타일 지도에 주변국까지 나와 산만함',
     tag: 'UI',
-    symptom:
-      'Leaflet + OpenStreetMap 타일로 만든 지도에 중국과 일본이 크게 잡혀 남한이 작게 보였다.',
-    cause:
-      '남한은 세로로 긴 지형이라 가로가 넓은 컨테이너에 fitBounds를 하면 세로에 맞춰지고 좌우로 주변국이 채워진다. 마운트 직후에는 Leaflet이 컨테이너 크기를 0으로 알고 있어 축소가 더 심해졌다.',
+    symptom: 'Leaflet + OpenStreetMap 타일로 만든 지도에 중국과 일본이 크게 잡혀 남한이 작게 보였다.',
+    cause: '남한은 세로로 긴 지형이라 가로가 넓은 컨테이너에 fitBounds를 하면 세로에 맞춰지고 좌우로 주변국이 채워진다. 마운트 직후에는 Leaflet이 컨테이너 크기를 0으로 알고 있어 축소가 더 심해졌다.',
     fix: '타일 지도를 걷어내고 통계청 시도 경계 GeoJSON을 SVG path로 변환해 남한만 직접 그렸다. 배경이 없으니 지도 전체를 지역 데이터에만 쓸 수 있고, 번들에서 Leaflet 의존성도 사라졌다.',
     file: 'components/exercise/KoreaMap.vue',
   },
@@ -227,8 +212,7 @@ export const troubles = [
     title: '지도 좌우에 빈 공간이 크게 남음',
     tag: 'UI',
     symptom: 'SVG로 바꾼 뒤에도 지도 양옆이 비어 실제 지형이 작게 보였다.',
-    cause:
-      '원본 데이터에 울릉도·독도(경도 130.9)가 들어 있어 투영 범위가 동쪽으로 크게 늘어났다. 본토는 경도 126~129.7 사이에 모여 있는데 화면은 125.9~130.9를 기준으로 잡혀 있었다.',
+    cause: '원본 데이터에 울릉도·독도(경도 130.9)가 들어 있어 투영 범위가 동쪽으로 크게 늘어났다. 본토는 경도 126~129.7 사이에 모여 있는데 화면은 125.9~130.9를 기준으로 잡혀 있었다.',
     fix: '경도 130도 밖에 있는 섬은 경계에서 제외하고 투영 범위를 본토와 제주에 맞춰 다시 계산했다. viewBox 높이도 실제 종횡비에서 자동으로 구하도록 바꿨다.',
     file: 'data/koreaMap.js',
   },
@@ -238,8 +222,7 @@ export const troubles = [
     title: 'applyTheme is not a function',
     tag: '스토어',
     symptom: '테마 기능을 넣자마자 앱이 실행되지 않고 콘솔에 함수가 없다는 오류가 떴다.',
-    cause:
-      '스토어에 action을 추가하는 편집이 실제로는 적용되지 않은 채 main.js에서 먼저 호출했다. getters 블록만 수정되고 actions 블록이 그대로였다.',
+    cause: '스토어에 action을 추가하는 편집이 실제로는 적용되지 않은 채 main.js에서 먼저 호출했다. getters 블록만 수정되고 actions 블록이 그대로였다.',
     fix: 'actions에 applyTheme / toggleTheme을 추가했다. 저장 후에는 파일을 다시 열어 반영 여부를 확인하는 절차를 넣었다.',
     file: 'stores/configStore.js',
   },
@@ -250,8 +233,7 @@ export const troubles = [
     title: '비 파티클이 화면에 나타나지 않음',
     tag: '스타일',
     symptom: '서울이 비인데도 배경에 빗줄기가 보이지 않았다.',
-    cause:
-      '배경 씬은 콘텐츠 가독성을 위해 맨 위에 반투명 덮개(veil)를 한 장 깔아 두는데, 비를 그 덮개보다 먼저 그리고 있었다. 요소가 없는 게 아니라 덮여 있었다.',
+    cause: '배경 씬은 콘텐츠 가독성을 위해 맨 위에 반투명 덮개(veil)를 한 장 깔아 두는데, 비를 그 덮개보다 먼저 그리고 있었다. 요소가 없는 게 아니라 덮여 있었다.',
     fix: '빗줄기와 눈, 러너를 덮개 뒤(DOM상 나중)로 옮겼다. 대신 덮개를 거치지 않으니 그만큼 진해져서 opacity로 다시 낮췄다.',
     file: 'components/exercise/WeatherScene.vue',
   },
@@ -261,8 +243,7 @@ export const troubles = [
     title: '러너 실루엣이 세로로 길게 늘어남',
     tag: '스타일',
     symptom: '배경에 넣은 달리는 사람이 비정상적으로 홀쭉하게 그려졌다.',
-    cause:
-      '배경 실루엣 레이어는 화면 폭에 맞춰 늘리려고 preserveAspectRatio="none"으로 두었다. 같은 레이어에 사람을 넣으니 사람까지 함께 늘어났다.',
+    cause: '배경 실루엣 레이어는 화면 폭에 맞춰 늘리려고 preserveAspectRatio="none"으로 두었다. 같은 레이어에 사람을 넣으니 사람까지 함께 늘어났다.',
     fix: '언덕·도시처럼 늘어나도 되는 것과 비율을 지켜야 하는 것을 분리했다. 러너는 별도 SVG로 빼서 고정 크기로 두고, 위치만 CSS 애니메이션으로 옮긴다.',
     file: 'components/exercise/WeatherScene.vue',
   },

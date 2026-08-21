@@ -122,10 +122,7 @@ watch([sortType, onlyHot], ([newSort, newHot], [oldSort, oldHot]) => {
 watch(
   () => filteredWeatherList.value.length,
   (newCount, oldCount) => {
-    const message =
-      newCount === 0
-        ? `🚨 [watch 결과 감시] 검색 결과가 ${oldCount}건 → 0건이 되었습니다.`
-        : `🔍 [watch 결과 감시] 검색 결과가 ${oldCount}건 → ${newCount}건으로 바뀌었습니다.`
+    const message = newCount === 0 ? `🚨 [watch 결과 감시] 검색 결과가 ${oldCount}건 → 0건이 되었습니다.` : `🔍 [watch 결과 감시] 검색 결과가 ${oldCount}건 → ${newCount}건으로 바뀌었습니다.`
 
     console.log(message)
     addLog(message)
@@ -182,23 +179,14 @@ const handleHotUpdate = (newHot) => {
     <BaseDashboardCard icon="⚙">
       <template #title>보기 설정</template>
 
-      <ViewOptions
-        :sort-type="sortType"
-        :only-hot="onlyHot"
-        @update-sort="handleSortUpdate"
-        @update-hot="handleHotUpdate"
-      />
+      <ViewOptions :sort-type="sortType" :only-hot="onlyHot" @update-sort="handleSortUpdate" @update-hot="handleHotUpdate" />
     </BaseDashboardCard>
 
     <BaseDashboardCard icon="📊">
       <template #title>지역별 날씨 현황</template>
 
       <!-- [2일차 요구사항 4] 검색 상태 안내 -->
-      <SearchNotice
-        :state="searchState"
-        :query="searchQuery"
-        :count="filteredWeatherList.length"
-      />
+      <SearchNotice :state="searchState" :query="searchQuery" :count="filteredWeatherList.length" />
 
       <template v-if="searchState !== 'none'">
         <WeatherCard
@@ -210,9 +198,7 @@ const handleHotUpdate = (newHot) => {
           @click-detail="handleClickDetail"
         />
 
-        <p v-if="visibleWeatherList.length === 0" class="empty">
-          보기 설정 조건에 맞는 도시가 없습니다.
-        </p>
+        <p v-if="visibleWeatherList.length === 0" class="empty">보기 설정 조건에 맞는 도시가 없습니다.</p>
       </template>
 
       <!-- 이름 붙인 슬롯. 이 박스에만 요약 줄이 붙는다. -->

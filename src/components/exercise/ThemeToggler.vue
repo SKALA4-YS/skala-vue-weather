@@ -7,11 +7,5 @@ const configStore = useConfigStore()
 </script>
 
 <template>
-  <el-button
-    :icon="configStore.isDark ? Moon : Sunny"
-    circle
-    size="small"
-    :title="configStore.isDark ? '라이트 모드로' : '다크 모드로'"
-    @click="configStore.toggleTheme()"
-  />
+  <el-button :icon="configStore.isDark ? Moon : Sunny" circle size="small" :title="configStore.isDark ? '라이트 모드로' : '다크 모드로'" @click="configStore.toggleTheme()" />
 </template>

@@ -29,7 +29,5 @@ const tagType = computed(() => {
 </script>
 
 <template>
-  <el-tag :type="tagType" size="small" effect="dark" round>
-    미세먼지 {{ gradeText }}
-  </el-tag>
+  <el-tag :type="tagType" size="small" effect="dark" round> 미세먼지 {{ gradeText }} </el-tag>
 </template>

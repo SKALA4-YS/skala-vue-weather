@@ -21,15 +21,10 @@ defineProps({
 
     <ul class="log-list">
       <li v-for="log in logs" :key="log.id">{{ log.text }}</li>
-      <li v-if="logs.length === 0" class="log-empty">
-        아직 감지된 변화가 없습니다. 카드를 클릭하거나 보기 설정을 바꿔 보세요.
-      </li>
+      <li v-if="logs.length === 0" class="log-empty">아직 감지된 변화가 없습니다. 카드를 클릭하거나 보기 설정을 바꿔 보세요.</li>
     </ul>
 
-    <small class="hint">
-      같은 내용이 브라우저 콘솔(F12)에도 출력됩니다.
-      watchEffect는 최초 1회 즉시 실행되므로 새로고침 직후에도 초기값이 이미 덮어써져 있습니다.
-    </small>
+    <small class="hint"> 같은 내용이 브라우저 콘솔(F12)에도 출력됩니다. watchEffect는 최초 1회 즉시 실행되므로 새로고침 직후에도 초기값이 이미 덮어써져 있습니다. </small>
   </div>
 </template>
 

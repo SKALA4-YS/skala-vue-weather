@@ -19,25 +19,11 @@ const handleRefresh = async () => {
 
 <template>
   <div class="refresh-bar">
-    <el-tag v-if="weatherStore.loading" type="info" size="small" effect="plain">
-      불러오는 중
-    </el-tag>
-    <el-tag v-else-if="!weatherStore.loaded" type="warning" size="small" effect="plain">
-      대기 중
-    </el-tag>
-    <el-tag v-else type="success" size="small" effect="plain">
-      {{ weatherStore.cities.length }}곳 · {{ weatherStore.updatedAt }}
-    </el-tag>
+    <el-tag v-if="weatherStore.loading" type="info" size="small" effect="plain"> 불러오는 중 </el-tag>
+    <el-tag v-else-if="!weatherStore.loaded" type="warning" size="small" effect="plain"> 대기 중 </el-tag>
+    <el-tag v-else type="success" size="small" effect="plain"> {{ weatherStore.cities.length }}곳 · {{ weatherStore.updatedAt }} </el-tag>
 
-    <el-button
-      :icon="Refresh"
-      :loading="weatherStore.loading"
-      size="small"
-      text
-      @click="handleRefresh"
-    >
-      새로고침
-    </el-button>
+    <el-button :icon="Refresh" :loading="weatherStore.loading" size="small" text @click="handleRefresh"> 새로고침 </el-button>
   </div>
 </template>
 

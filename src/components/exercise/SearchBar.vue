@@ -37,13 +37,5 @@ const handleCompositionEnd = (e) => {
 </script>
 
 <template>
-  <el-input
-    :model-value="query"
-    placeholder="도시 이름 검색"
-    :prefix-icon="Search"
-    clearable
-    @input="handleInput"
-    @compositionstart="handleCompositionStart"
-    @compositionend="handleCompositionEnd"
-  />
+  <el-input :model-value="query" placeholder="도시 이름 검색" :prefix-icon="Search" clearable @input="handleInput" @compositionstart="handleCompositionStart" @compositionend="handleCompositionEnd" />
 </template>

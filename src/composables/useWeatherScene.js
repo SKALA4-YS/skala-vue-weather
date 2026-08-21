@@ -103,9 +103,7 @@ export const useWeatherScene = () => {
 
   const foliage = computed(() => FOLIAGE[season.value])
 
-  const showSun = computed(
-    () => !isNight.value && condition.value !== 'rain' && condition.value !== 'storm',
-  )
+  const showSun = computed(() => !isNight.value && condition.value !== 'rain' && condition.value !== 'storm')
   const showMoon = computed(() => isNight.value && condition.value === 'clear')
   const showStars = computed(() => isNight.value && condition.value !== 'rain')
   const showClouds = computed(() => condition.value !== 'clear')
